@@ -1,0 +1,140 @@
+MPLINK 4.37, Linker
+Linker Map File - Created Fri Nov 30 20:11:04 2018
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x0008f2
+.config_300001_TRENA MCR ASM.O    romdata   0x300001    program   0x000001
+.config_300002_TRENA MCR ASM.O    romdata   0x300002    program   0x000001
+.config_300003_TRENA MCR ASM.O    romdata   0x300003    program   0x000001
+.config_300005_TRENA MCR ASM.O    romdata   0x300005    program   0x000001
+.config_300006_TRENA MCR ASM.O    romdata   0x300006    program   0x000001
+.config_300008_TRENA MCR ASM.O    romdata   0x300008    program   0x000001
+.config_300009_TRENA MCR ASM.O    romdata   0x300009    program   0x000001
+.config_30000A_TRENA MCR ASM.O    romdata   0x30000a    program   0x000001
+.config_30000B_TRENA MCR ASM.O    romdata   0x30000b    program   0x000001
+.config_30000C_TRENA MCR ASM.O    romdata   0x30000c    program   0x000001
+.config_30000D_TRENA MCR ASM.O    romdata   0x30000d    program   0x000001
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x0008f1      
+                            0x300001    0x300003      
+                            0x300005    0x300006      
+                            0x300008    0x30000d      
+            2301 out of 33048 program addresses used, program memory utilization is 6%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+              ALTERA_MODO   0x00012e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                 ATUALIZA   0x000356    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+          ATUALIZA_METROS   0x000388    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                  AUMENTA   0x0002ea    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                CALC_AREA   0x00060e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+             CONFIGURACAO   0x00042e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            CORRIGE_VALOR   0x000350    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+               DECREMENTA   0x00049a    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            DECREMENTANDO   0x000340    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+              DEFINE_UNID   0x000886    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                   DELAYS   0x00020e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                 DELAY_MS   0x000004    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                  DIMINUI   0x000330    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            ERRO_MEMORIA2   0x00076e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                ERRO_MODO   0x0006ce    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                  ESCREVE   0x00003c    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+               ESCREVE_CM   0x000140    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+       ESCREVE_CRONOMETRO   0x000092    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+              ESCREVE_MET   0x000158    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            ESCREVE_START   0x0000d0    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+               INCREMENTA   0x00045c    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            INCREMENTANDO   0x0002fa    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+    INICIALIZACAO_DISPLAY   0x000020    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+              INICIO_UNID   0x00011e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                     LOOP   0x0002ae    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                    LOOP1   0x0002c4    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                    LOOP2   0x0002d4    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                    LOOP3   0x00030a    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                    LOOP4   0x00031a    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                     LOP1   0x00028e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                     LOP2   0x00029e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                   METROS   0x0008a8    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+    MOSTRA_TELA_PRINCIPAL   0x00006a    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                SALVAR_M1   0x0004d8    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                SALVAR_M2   0x000570    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+    STATUS_TEMPO_CONTANDO   0x000170    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+              STOP_BOTOES   0x0008c0    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                TABELA_7S   0x00004e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                TELA_STOP   0x0003b8    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            TRATA_BOTAO_2   0x0008e8    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            TRATA_BOTAO_7   0x0008de    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+               TRATA_STOP   0x0008b8    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            conv_binToDec   0x00084e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                  end_adj   0x00087e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                  incDezA   0x00087c    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                loop_mult   0x00083c    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                     mult   0x000834    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                start_adj   0x00085c    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                 DELAY_MS   0x000004    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+    INICIALIZACAO_DISPLAY   0x000020    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                  ESCREVE   0x00003c    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                TABELA_7S   0x00004e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+    MOSTRA_TELA_PRINCIPAL   0x00006a    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+       ESCREVE_CRONOMETRO   0x000092    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            ESCREVE_START   0x0000d0    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+              INICIO_UNID   0x00011e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+              ALTERA_MODO   0x00012e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+               ESCREVE_CM   0x000140    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+              ESCREVE_MET   0x000158    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+    STATUS_TEMPO_CONTANDO   0x000170    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                   DELAYS   0x00020e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                     LOP1   0x00028e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                     LOP2   0x00029e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                     LOOP   0x0002ae    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                    LOOP1   0x0002c4    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                    LOOP2   0x0002d4    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                  AUMENTA   0x0002ea    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            INCREMENTANDO   0x0002fa    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                    LOOP3   0x00030a    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                    LOOP4   0x00031a    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                  DIMINUI   0x000330    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            DECREMENTANDO   0x000340    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            CORRIGE_VALOR   0x000350    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                 ATUALIZA   0x000356    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+          ATUALIZA_METROS   0x000388    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                TELA_STOP   0x0003b8    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+             CONFIGURACAO   0x00042e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+               INCREMENTA   0x00045c    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+               DECREMENTA   0x00049a    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                SALVAR_M1   0x0004d8    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                SALVAR_M2   0x000570    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                CALC_AREA   0x00060e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                ERRO_MODO   0x0006ce    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            ERRO_MEMORIA2   0x00076e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                     mult   0x000834    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                loop_mult   0x00083c    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            conv_binToDec   0x00084e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                start_adj   0x00085c    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                  incDezA   0x00087c    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                  end_adj   0x00087e    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+              DEFINE_UNID   0x000886    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+                   METROS   0x0008a8    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+               TRATA_STOP   0x0008b8    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+              STOP_BOTOES   0x0008c0    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            TRATA_BOTAO_7   0x0008de    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+            TRATA_BOTAO_2   0x0008e8    program     static C:\Users\Drika\Desktop\MCT\Projeto Trena\Software\TRENA MCR ASM.asm
+
+

@@ -1,0 +1,2617 @@
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00002 ; * CONFIGURAÇÕES PARA GRAVAÇÃO *
+                      00003 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Warning[205]: Found directive in column 1. (CONFIG)
+02 00 0E 81 81 0F C0 000004 CONFIG OSC = HS, FCMEN = OFF, IESO = OFF, PWRT = ON, BOREN = OFF, BORV = 0
+       F E0 0F 40 
+Warning[205]: Found directive in column 1. (CONFIG)
+                      00005 CONFIG WDT = OFF, WDTPS = 128, MCLRE = ON, LPT1OSC = OFF, PBADEN = OFF
+Warning[205]: Found directive in column 1. (CONFIG)
+                      00006 CONFIG CCP2MX = PORTC, STVREN = ON, LVP = OFF, DEBUG = OFF, XINST = OFF
+                      00007 
+                      00008 
+                      00009 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00010 ; * DEFINIÇÃO DAS VARIÁVEIS *
+                      00011 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Warning[205]: Found directive in column 1. (CBLOCK)
+                      00012 CBLOCK 0X00
+                      00013 
+  00000000            00014  COUNTER1                       ;Definindo variavel
+  00000001            00015  TMR0                           ;Definindo variavel
+                      00016                                 
+  00000002            00017  TEMPO1                         ;Definindo variavel
+  00000003            00018  TEMPO0                         ;Definindo variavel
+  00000004            00019  TESTE1                         ;Definindo variavel
+  00000005            00020  LCD1                           ;Definindo variavel                     
+                      00021 
+  00000006            00022 UNID                    ;Definindo variavel
+  00000007            00023  DEZE                           ;Definindo variavel     
+  00000008            00024  CENT                   ;Definindo variavel             
+  00000009            00025  MIL                            ;Definindo variavel
+  0000000A            00026  CONTAGEM                       ;Definindo variavel
+                      00027 
+  0000000B            00028  MEMORIA_UNID1                  ;Definindo variavel
+  0000000C            00029  MEMORIA_DEZ1                   ;Definindo variavel             
+  0000000D            00030  MEMORIA_CENT1                  ;Definindo variavel             
+  0000000E            00031  MEMORIA_MIL1                   ;Definindo variavel
+  0000000F            00032  CONTAGEM1                      ;Definindo variavel
+                      00033 
+  00000010            00034  MEMORIA_UNID2                  ;Definindo variavel
+  00000011            00035  MEMORIA_DEZ2                   ;Definindo variavel                     
+  00000012            00036  MEMORIA_CENT2                  ;Definindo variavel             
+  00000013            00037  MEMORIA_MIL2                   ;Definindo variavel
+  00000014            00038  CONTAGEM2                      ;Definindo variavel
+                      00039 
+                      00040 
+  00000015            00041  A0                             ;Definindo variavel                                                     
+                                    
+  00000016            00042  B0                             ;Definindo variavel                                     
+  00000017            00043  C0                             ;Definindo variavel                                     
+  00000018            00044  C1                             ;Definindo variavel                                     
+                      00045 
+  00000019            00046  REG_AUX                        ;Definindo variavel
+  0000001A            00047  UNI                            ;Definindo variavel                     
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  0000001B            00048  DEZ                            ;Definindo variavel
+  0000001C            00049  CEN                            ;Definindo variavel
+                      00050 
+  0000001D            00051  MODO                           ;Definindo variavel
+                      00052 
+Warning[205]: Found directive in column 1. (ENDC)
+                      00053 ENDC                            ;Terminando vetor de Declaracao de variaveis
+                      00054         
+                      00055 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00056 ; * DEFINIÇÃO DAS VARIÁVEIS INTERNAS DO PIC *
+                      00057 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00058 #INCLUDE <P18F4520.INC>         ;Incluindo biblioteca de intrucoes do pic
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC18F4520 processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2007 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      01336         LIST
+                      00059 
+                      00060 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00061 ; * CONSTANTES INTERNAS *
+                      00062 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+  0000000A            00063 MAX1 EQU .10            ;Defininco constante
+  00000006            00064 MAX2 EQU .6                     ;Definindo constante
+                      00065 
+                      00066 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00067 ; * ENTRADAS *
+                      00068 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00069 #DEFINE BOTAO_0 PORTB,7         ;Definindo botao para o PortC
+                      00070 #DEFINE BOTAO_1 PORTB,2         ;Definindo botao para o PortC
+                      00071 #DEFINE BOTAO_2 PORTB,3         ;Definindo botao para o PortC
+                      00072 #DEFINE BOTAO_3 PORTB,4         ;Definindo botao para o PortC
+                      00073 #DEFINE BOTAO_4 PORTC,5         ;Definindo botao para o PortC
+                      00074 #DEFINE SENSOR1 PORTB,0         ;Definindo botao para o PortC   
+                      00075 #DEFINE SENSOR2 PORTB,1         ;Definindo botao para o PortC
+                      00076 #DEFINE BOTAO_7 PORTB,6         ;Definindo botao para o PortC
+                      00077 #DEFINE BOTAO_5 PORTB,5         ;Definindo botao para o PortC
+                      00078 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00079 ; * SAÍDAS *
+                      00080 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00081 #DEFINE DISPLAY LATD            ;Definindo display para o LATD
+                      00082 #DEFINE RS LATC,2                       ;Definindo Pino RS para o LATC, 2
+                      00083 #DEFINE ENABLE LATC,3           ;Definindo Pino RS para o LATC, 3
+                      00084 
+                      00085 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00086 ; * VETOR DE RESET DO MICROUNIDROLADOR *
+                      00087 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Warning[205]: Found directive in column 1. (ORG)
+000000                00088 ORG 0X0000                                      ;Vetor 0
+Warning[203]: Found opcode in column 1. (GOTO)
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000000 EF17 F002      00089 GOTO CONFIGURACAO                       ;Vai para a configuracao da placa
+                      00090 
+                      00091 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00092 ; * ROTINA DE DELAY *
+                      00093 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+000004                00094 DELAY_MS                                        ;Rotina de delay
+000004 6E02           00095  MOVWF TEMPO1
+000006 0EC8           00096  MOVLW .200
+000008 6E03           00097  MOVWF TEMPO0
+00000A 0000           00098  NOP
+00000C 0000           00099  NOP
+00000E 0000           00100  NOP
+000010 0000           00101  NOP
+000012 0000           00102  NOP
+000014 0000           00103  NOP
+000016 2E03           00104  DECFSZ TEMPO0,F
+000018 D7F8           00105  BRA $-.14
+                      00106 
+00001A 2E02           00107  DECFSZ TEMPO1,F
+00001C D7F4           00108  BRA $-.22
+00001E 0012           00109  RETURN
+                      00110 
+                      00111 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00112 ; * CONFIGURACOES INICIAIS DO DISPLAY *
+                      00113 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+000020                00114 INICIALIZACAO_DISPLAY                   ;Rotina de configuracoes iniciais do LCD
+000020 0E1E           00115  MOVLW .30
+000022 DFF0           00116  RCALL DELAY_MS
+000024 948B           00117  BCF RS
+000026 0E38           00118  MOVLW B'00111000'
+000028 D809           00119  RCALL ESCREVE
+00002A 0E0C           00120  MOVLW B'00001100'
+00002C D807           00121  RCALL ESCREVE
+                      00122 
+00002E 0E01           00123  MOVLW B'00000001'
+000030 D805           00124  RCALL ESCREVE
+000032 0E01           00125  MOVLW .1
+000034 DFE7           00126  RCALL DELAY_MS
+                      00127 
+000036 0E06           00128  MOVLW B'00000110'
+000038 D801           00129  RCALL ESCREVE
+                      00130 
+00003A 848B           00131  BSF RS 
+                      00132 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00133 ; * ROTINA DE ESCRITA DE UM CARACTER NO DISPLAY *
+                      00134 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+00003C                00135 ESCREVE 
+00003C 6E8C           00136  MOVWF DISPLAY
+00003E 0000           00137  NOP
+000040 868B           00138  BSF ENABLE
+000042 0000           00139  NOP
+000044 0000           00140  NOP
+000046 968B           00141  BCF ENABLE
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000048 0E01           00142  MOVLW .1
+00004A DFDC           00143  RCALL DELAY_MS
+00004C 0012           00144  RETURN
+                      00145 
+                      00146 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00147 ; * TABELA PARA CONTAGEM *
+                      00148 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+00004E                00149 TABELA_7S                                       ;Tabela com o digito base para devolver valor das variav
+                            eis
+00004E 0B0F           00150  ANDLW B'00001111'
+000050 44E8           00151  RLNCF WREG,W
+000052 26F9           00152  ADDWF PCL,F
+                      00153 
+000054 0C30           00154  RETLW '0' ; 0h - 0                     
+000056 0C31           00155  RETLW '1' ; 1h - 1
+000058 0C32           00156  RETLW '2' ; 2h - 2
+00005A 0C33           00157  RETLW '3' ; 3h - 3
+00005C 0C34           00158  RETLW '4' ; 4h - 4
+00005E 0C35           00159  RETLW '5' ; 5h - 5
+000060 0C36           00160  RETLW '6' ; 6h - 6
+000062 0C37           00161  RETLW '7' ; 7h - 7
+000064 0C38           00162  RETLW '8' ; 8h - 8
+000066 0C39           00163  RETLW '9' ; 9h - 9
+000068 0012           00164  RETURN
+                      00165 
+                      00166 
+                      00167 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00168 ; * ROTINA DE ESCRITA DA TELA PRINCIPAL *
+                      00169 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+00006A                00170 MOSTRA_TELA_PRINCIPAL
+00006A 6A0B           00171  CLRF MEMORIA_UNID1                     ;Zera variável
+00006C 6A0C           00172  CLRF MEMORIA_DEZ1                              ;Zera variável
+00006E 6A0D           00173  CLRF MEMORIA_CENT1                     ;Zera variável
+000070 6A0E           00174  CLRF MEMORIA_MIL1                              ;Zera variável          
+000072 6A0F           00175  CLRF CONTAGEM1                         ;Zera variável                  
+000074 6A10           00176  CLRF MEMORIA_UNID2                     ;Zera variável
+000076 6A11           00177  CLRF MEMORIA_DEZ2                              ;Zera variável
+000078 6A12           00178  CLRF MEMORIA_CENT2                     ;Zera variável
+00007A 6A13           00179  CLRF MEMORIA_MIL2                              ;Zera variável
+00007C 6A14           00180  CLRF CONTAGEM2                         ;Zera variável
+00007E 6A1D           00181  CLRF MODO                                      ;Zera variável
+                      00182  
+000080 948B           00183  BCF RS                         ;Altera bit para enviar comand
+000082 0E01           00184  MOVLW 0X01
+000084 DFDB           00185  RCALL ESCREVE
+000086 0E01           00186  MOVLW .1
+000088 DFBD           00187  RCALL DELAY_MS
+00008A 0E80           00188  MOVLW 0X80
+00008C DFD7           00189  RCALL ESCREVE
+00008E D801           00190  RCALL ESCREVE_CRONOMETRO
+000090 D01F           00191  BRA ESCREVE_START 
+                      00192 
+000092                00193 ESCREVE_CRONOMETRO
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000092 848B           00194  BSF RS
+000094 0E54           00195  MOVLW 'T'                                      ;Escreve digito no display
+000096 DFD2           00196  RCALL ESCREVE                          ;Escreve digito no display
+000098 0E52           00197  MOVLW 'R'                                      ;Escreve digito no display
+00009A DFD0           00198  RCALL ESCREVE                          ;Escreve digito no display
+00009C 0E45           00199  MOVLW 'E'                                      ;Escreve digito no display
+00009E DFCE           00200  RCALL ESCREVE                          ;Escreve digito no display
+0000A0 0E4E           00201  MOVLW 'N'                                      ;Escreve digito no display      
+0000A2 DFCC           00202  RCALL ESCREVE                          ;Escreve digito no display
+0000A4 0E41           00203  MOVLW 'A'                                      ;Escreve digito no display
+0000A6 DFCA           00204  RCALL ESCREVE                          ;Escreve digito no display
+0000A8 0E20           00205  MOVLW ' '                                      ;Escreve digito no display
+0000AA DFC8           00206  RCALL ESCREVE                          ;Escreve digito no display
+0000AC 0E4D           00207  MOVLW 'M'                                      ;Escreve digito no display
+0000AE DFC6           00208  RCALL ESCREVE                          ;Escreve digito no display
+0000B0 0E43           00209  MOVLW 'C'                                      ;Escreve digito no display
+0000B2 DFC4           00210  RCALL ESCREVE                          ;Escreve digito no display
+0000B4 0E52           00211  MOVLW 'R'                                      ;Escreve digito no display
+0000B6 DFC2           00212  RCALL ESCREVE                          ;Escreve digito no display
+0000B8 0E2D           00213  MOVLW '-'                                      ;Escreve digito no display
+0000BA DFC0           00214  RCALL ESCREVE                          ;Escreve digito no display
+0000BC 0E41           00215  MOVLW 'A'                                      ;Escreve digito no display
+0000BE EC1E F000      00216  CALL ESCREVE                           ;Escreve digito no display
+0000C2 0E53           00217  MOVLW 'S'                                      ;Escreve digito no display
+0000C4 EC1E F000      00218  CALL ESCREVE                           ;Escreve digito no display
+0000C8 0E4D           00219  MOVLW 'M'                                      ;Escreve digito no display
+0000CA EC1E F000      00220  CALL ESCREVE                           ;Escreve digito no display
+0000CE 0012           00221  RETURN
+                      00222 
+0000D0                00223 ESCREVE_START 
+0000D0 948B           00224  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+0000D2 0EC0           00225  MOVLW 0XC0                     ;Define 5 Digito da Segunda Linha para começar a escrita
+0000D4 DFB3           00226  RCALL ESCREVE          ;Envia o comando para o Microcontrolador
+                      00227 
+                      00228 
+0000D6 848B           00229  BSF RS
+0000D8 0E53           00230  MOVLW 'S'                                      ;Escreve digito no display
+0000DA DFB0           00231  RCALL ESCREVE                          ;Escreve digito no display
+0000DC 0E74           00232  MOVLW 't'                                      ;Escreve digito no display
+0000DE DFAE           00233  RCALL ESCREVE                          ;Escreve digito no display
+0000E0 0E61           00234  MOVLW 'a'                                      ;Escreve digito no display
+0000E2 DFAC           00235  RCALL ESCREVE                          ;Escreve digito no display
+0000E4 0E72           00236  MOVLW 'r'                                      ;Escreve digito no display
+0000E6 DFAA           00237  RCALL ESCREVE                          ;Escreve digito no display
+0000E8 0E74           00238  MOVLW 't'                                      ;Escreve digito no display
+0000EA DFA8           00239  RCALL ESCREVE                          ;Escreve digito no display
+                      00240 
+0000EC 948B           00241  BCF RS                         ;Configura local de Escrita do LCD
+0000EE 0EC8           00242  MOVLW 0XC8
+0000F0 DFA5           00243  RCALL ESCREVE
+0000F2 848B           00244  BSF RS  
+                      00245 
+0000F4 0E4D           00246  MOVLW 'M'
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0000F6 EC1E F000      00247  CALL ESCREVE
+0000FA 0E6F           00248  MOVLW 'o'
+0000FC EC1E F000      00249  CALL ESCREVE  
+000100 0E64           00250  MOVLW 'd'
+000102 EC1E F000      00251  CALL ESCREVE
+000106 0E6F           00252  MOVLW 'o'
+000108 EC1E F000      00253  CALL ESCREVE
+00010C 0E3A           00254  MOVLW ':'
+00010E EC1E F000      00255  CALL ESCREVE
+000112 0E63           00256  MOVLW 'c'
+000114 EC1E F000      00257  CALL ESCREVE
+000118 0E6D           00258  MOVLW 'm'
+00011A EC1E F000      00259  CALL ESCREVE
+                      00260  
+                      00261 
+                      00262 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00263 ; * ROTINA DE LEITURA DOS BOTOES*
+                      00264 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00265 
+00011E                00266 INICIO_UNID
+00011E AE81           00267  BTFSS BOTAO_0
+000120 D027           00268  BRA STATUS_TEMPO_CONTANDO
+000122 A681           00269  BTFSS BOTAO_2
+000124 EF74 F004      00270  GOTO TRATA_BOTAO_2
+000128 AA81           00271  BTFSS BOTAO_5
+00012A D001           00272  BRA  ALTERA_MODO
+00012C D7F8           00273  BRA INICIO_UNID
+                      00274 
+00012E                00275 ALTERA_MODO
+00012E AA81           00276  BTFSS  BOTAO_5
+000130 EF97 F000      00277  GOTO   ALTERA_MODO
+000134 701D           00278  BTG    MODO,0
+                      00279 
+000136 A01D           00280  BTFSS  MODO,0
+000138 EFA0 F000      00281  GOTO   ESCREVE_CM
+00013C EFAC F000      00282  GOTO   ESCREVE_MET
+                      00283 
+000140                00284 ESCREVE_CM
+000140 948B           00285  BCF RS                         ;Configura local de Escrita do LCD
+000142 0ECD           00286  MOVLW 0XCD
+000144 DF7B           00287  RCALL ESCREVE
+                      00288 
+000146 848B           00289  BSF RS  
+000148 0E63           00290  MOVLW 'c'
+00014A EC1E F000      00291  CALL ESCREVE
+00014E 0E6D           00292  MOVLW 'm'
+000150 EC1E F000      00293  CALL ESCREVE 
+000154 EF8F F000      00294  GOTO INICIO_UNID
+                      00295 
+000158                00296 ESCREVE_MET
+000158 948B           00297  BCF RS                         ;Configura local de Escrita do LCD
+00015A 0ECD           00298  MOVLW 0XCD
+00015C DF6F           00299  RCALL ESCREVE
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00300 
+00015E 848B           00301  BSF RS  
+000160 0E20           00302  MOVLW ' '
+000162 EC1E F000      00303  CALL ESCREVE  
+000166 0E6D           00304  MOVLW 'm'
+000168 EC1E F000      00305  CALL ESCREVE
+00016C EF8F F000      00306  GOTO INICIO_UNID
+                      00307 
+                      00308 
+                      00309 
+                      00310 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00311 ; * ROTINA INICIALIZANDO A MEDIÇÃO*
+                      00312 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00313 
+                      00314 
+000170                00315 STATUS_TEMPO_CONTANDO
+000170 6A06           00316  CLRF UNID
+000172 6A07           00317  CLRF DEZE
+000174 6A08           00318  CLRF CENT
+000176 6A09           00319  CLRF MIL
+000178 6A0A           00320  CLRF CONTAGEM
+                      00321 
+00017A 948B           00322  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+00017C 0E80           00323  MOVLW 0X80
+00017E DF5E           00324  RCALL ESCREVE
+                      00325 
+000180 848B           00326  BSF RS
+000182 0E20           00327  MOVLW ' '
+000184 DF5B           00328  RCALL ESCREVE
+000186 0E49           00329  MOVLW 'I'
+000188 DF59           00330  RCALL ESCREVE
+00018A 0E6E           00331  MOVLW 'n'
+00018C DF57           00332  RCALL ESCREVE
+00018E 0E69           00333  MOVLW 'i'
+000190 DF55           00334  RCALL ESCREVE
+000192 0E63           00335  MOVLW 'c'
+000194 DF53           00336  RCALL ESCREVE
+000196 0E69           00337  MOVLW 'i'
+000198 DF51           00338  RCALL ESCREVE
+00019A 0E61           00339  MOVLW 'a'
+00019C DF4F           00340  RCALL ESCREVE
+00019E 0E6C           00341  MOVLW 'l'
+0001A0 DF4D           00342  RCALL ESCREVE
+0001A2 0E69           00343  MOVLW 'i'
+0001A4 DF4B           00344  RCALL ESCREVE
+0001A6 0E7A           00345  MOVLW 'z'
+0001A8 DF49           00346  RCALL ESCREVE
+0001AA 0E61           00347  MOVLW 'a'
+0001AC DF47           00348  RCALL ESCREVE
+0001AE 0E6E           00349  MOVLW 'n'
+0001B0 EC1E F000      00350  CALL ESCREVE
+0001B4 0E64           00351  MOVLW 'd'
+0001B6 EC1E F000      00352  CALL ESCREVE
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0001BA 0E6F           00353  MOVLW 'o'
+0001BC EC1E F000      00354  CALL ESCREVE
+0001C0 0E20           00355  MOVLW ' '
+0001C2 DF3C           00356  RCALL ESCREVE
+0001C4 0E20           00357  MOVLW ' '
+0001C6 DF3A           00358  RCALL ESCREVE
+                      00359 
+0001C8 948B           00360  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+0001CA 0EC0           00361  MOVLW 0XC0                     ;Define 5 Digito da Segunda Linha para começar a escrita
+0001CC DF37           00362  RCALL ESCREVE          ;Envia o comando para o Microcontrolador
+                      00363  
+0001CE 848B           00364  BSF RS
+0001D0 0E20           00365  MOVLW ' '
+0001D2 DF34           00366  RCALL ESCREVE
+0001D4 0E4D           00367  MOVLW 'M'
+0001D6 DF32           00368  RCALL ESCREVE
+0001D8 0E65           00369  MOVLW 'e'
+0001DA DF30           00370  RCALL ESCREVE
+0001DC 0E64           00371  MOVLW 'd'
+0001DE DF2E           00372  RCALL ESCREVE
+0001E0 0E69           00373  MOVLW 'i'
+0001E2 DF2C           00374  RCALL ESCREVE
+0001E4 0E64           00375  MOVLW 'd'
+0001E6 DF2A           00376  RCALL ESCREVE
+0001E8 0E61           00377  MOVLW 'a'
+0001EA DF28           00378  RCALL ESCREVE
+0001EC 0E20           00379  MOVLW ' '
+0001EE DF26           00380  RCALL ESCREVE
+0001F0 0E65           00381  MOVLW 'e'
+0001F2 DF24           00382  RCALL ESCREVE
+0001F4 0E6D           00383  MOVLW 'm'
+0001F6 DF22           00384  RCALL ESCREVE
+0001F8 0E20           00385  MOVLW ' '
+0001FA DF20           00386  RCALL ESCREVE
+0001FC 0E20           00387  MOVLW ' '
+0001FE DF1E           00388  RCALL ESCREVE
+                      00389 
+000200 948B           00390  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+000202 0ECC           00391  MOVLW 0XCC                     ;Define 5 Digito da Segunda Linha para começar a escrita
+000204 DF1B           00392  RCALL ESCREVE          ;Envia o comando para o Microcontrolador
+                      00393 
+000206 EC43 F004      00394  CALL DEFINE_UNID
+                      00395 
+00020A 0E20           00396  MOVLW ' '
+00020C DF17           00397  RCALL ESCREVE
+                      00398 
+00020E                00399 DELAYS
+Warning[202]: Argument out of range.  Least significant bits used.
+00020E 0EB8           00400  MOVLW .3000
+000210 DEF9           00401  RCALL DELAY_MS
+                      00402 
+Warning[202]: Argument out of range.  Least significant bits used.
+000212 0EB8           00403  MOVLW .3000
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000214 DEF7           00404  RCALL DELAY_MS
+                      00405 
+Warning[202]: Argument out of range.  Least significant bits used.
+000216 0EB8           00406  MOVLW .3000
+000218 DEF5           00407  RCALL DELAY_MS
+                      00408 
+                      00409 
+                      00410 ;****************************************************************************
+00021A 8AF2           00411  BSF    INTCON,T0IE
+00021C 948B           00412  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+00021E 0E80           00413  MOVLW 0X80
+000220 DF0D           00414  RCALL ESCREVE
+                      00415 
+000222 848B           00416  BSF RS
+000224 0E20           00417  MOVLW ' '
+000226 DF0A           00418  RCALL ESCREVE
+000228 0E49           00419  MOVLW 'I'
+00022A DF08           00420  RCALL ESCREVE
+00022C 0E6E           00421  MOVLW 'n'
+00022E DF06           00422  RCALL ESCREVE
+000230 0E69           00423  MOVLW 'i'
+000232 DF04           00424  RCALL ESCREVE
+000234 0E63           00425  MOVLW 'c'
+000236 DF02           00426  RCALL ESCREVE
+000238 0E69           00427  MOVLW 'i'
+00023A DF00           00428  RCALL ESCREVE
+00023C 0E61           00429  MOVLW 'a'
+00023E DEFE           00430  RCALL ESCREVE
+000240 0E72           00431  MOVLW 'r'
+000242 DEFC           00432  RCALL ESCREVE
+000244 0E20           00433  MOVLW ' '
+000246 DEFA           00434  RCALL ESCREVE
+000248 0E4D           00435  MOVLW 'M'
+00024A DEF8           00436  RCALL ESCREVE
+00024C 0E65           00437  MOVLW 'e'
+00024E DEF6           00438  RCALL ESCREVE
+000250 0E64           00439  MOVLW 'd'
+000252 DEF4           00440  RCALL ESCREVE
+000254 0E69           00441  MOVLW 'i'
+000256 DEF2           00442  RCALL ESCREVE
+000258 0E64           00443  MOVLW 'd'
+00025A DEF0           00444  RCALL ESCREVE
+00025C 0E61           00445  MOVLW 'a'
+00025E DEEE           00446  RCALL ESCREVE
+000260 0E20           00447  MOVLW ' '
+000262 DEEC           00448  RCALL ESCREVE
+                      00449 
+                      00450 
+                      00451 
+000264 948B           00452  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+000266 0EC0           00453  MOVLW 0XC0                     ;Define 5 Digito da Segunda Linha para começar a escrita
+000268 DEE9           00454  RCALL ESCREVE          ;Envia o comando para o Microcontrolador
+                      00455 
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00026A 848B           00456  BSF RS
+00026C 0E53           00457  MOVLW 'S'
+00026E DEE6           00458  RCALL ESCREVE
+000270 0E74           00459  MOVLW 't'
+000272 DEE4           00460  RCALL ESCREVE
+000274 0E6F           00461  MOVLW 'o'
+000276 DEE2           00462  RCALL ESCREVE
+000278 0E70           00463  MOVLW 'p'
+00027A DEE0           00464  RCALL ESCREVE
+00027C 0E20           00465  MOVLW ' '
+00027E DEDE           00466  RCALL ESCREVE
+000280 0E20           00467  MOVLW ' '
+000282 DEDC           00468  RCALL ESCREVE
+000284 0E20           00469  MOVLW ' '
+000286 DEDA           00470  RCALL ESCREVE
+000288 0E20           00471  MOVLW ' '
+00028A DED8           00472  RCALL ESCREVE
+00028C D864           00473  RCALL  ATUALIZA
+                      00474 
+                      00475 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00476 ; * MONITORAMENTO DOS SENSORES DA TRENA*
+                      00477 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00478 
+00028E                00479 LOP1
+00028E A481           00480                 BTFSS           BOTAO_1
+000290 EF5C F004      00481                 GOTO            TRATA_STOP
+000294 B081           00482                 BTFSC           SENSOR1
+000296 EF57 F001      00483                 GOTO            LOOP
+00029A EF47 F001      00484                 GOTO            LOP1
+00029E                00485 LOP2
+00029E A481           00486                 BTFSS           BOTAO_1
+0002A0 EF5C F004      00487                 GOTO            TRATA_STOP
+0002A4 B281           00488                 BTFSC           SENSOR2
+0002A6 EF57 F001      00489                 GOTO            LOOP
+0002AA EF4F F001      00490                 GOTO            LOP2            
+0002AE                00491 LOOP
+0002AE A481           00492                 BTFSS           BOTAO_1
+0002B0 EF5C F004      00493                 GOTO            TRATA_STOP
+0002B4 A081           00494                 BTFSS           SENSOR1
+0002B6 EF62 F001      00495                 GOTO            LOOP1
+0002BA A281           00496                 BTFSS           SENSOR2
+0002BC EF85 F001      00497                 GOTO            LOOP3
+0002C0 EF57 F001      00498                 GOTO            LOOP
+0002C4                00499 LOOP1
+0002C4 A481           00500                 BTFSS           BOTAO_1
+0002C6 EF5C F004      00501                 GOTO            TRATA_STOP
+0002CA B081           00502                 BTFSC           SENSOR1
+0002CC EF6A F001      00503                 GOTO            LOOP2
+0002D0 EF62 F001      00504                 GOTO            LOOP1
+0002D4                00505 LOOP2
+0002D4 A481           00506                 BTFSS           BOTAO_1
+0002D6 EF5C F004      00507                 GOTO            TRATA_STOP
+0002DA A281           00508                 BTFSS           SENSOR2
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0002DC EF75 F001      00509                 GOTO            AUMENTA
+0002E0 A081           00510                 BTFSS           SENSOR1
+0002E2 EF47 F001      00511                 GOTO            LOP1
+0002E6 EF6A F001      00512                 GOTO            LOOP2
+0002EA                00513 AUMENTA
+0002EA A481           00514                 BTFSS           BOTAO_1
+0002EC EF5C F004      00515                 GOTO            TRATA_STOP
+0002F0 B281           00516                 BTFSC           SENSOR2
+0002F2 EF7D F001      00517                 GOTO            INCREMENTANDO
+0002F6 EF75 F001      00518                 GOTO            AUMENTA
+0002FA                00519 INCREMENTANDO
+0002FA 2A0A           00520                 INCF            CONTAGEM
+0002FC D8AF           00521                 RCALL           INCREMENTA
+0002FE D828           00522                 RCALL           CORRIGE_VALOR
+000300 A481           00523                 BTFSS           BOTAO_1
+000302 EF5C F004      00524                 GOTO            TRATA_STOP
+000306 EF57 F001      00525                 GOTO            LOOP
+00030A                00526 LOOP3
+00030A A481           00527                 BTFSS           BOTAO_1
+00030C EF5C F004      00528                 GOTO            TRATA_STOP
+000310 B281           00529                 BTFSC           SENSOR2
+000312 EF8D F001      00530                 GOTO            LOOP4
+000316 EF85 F001      00531                 GOTO            LOOP3
+00031A                00532 LOOP4
+00031A A481           00533                 BTFSS           BOTAO_1
+00031C EF5C F004      00534                 GOTO            TRATA_STOP
+000320 A081           00535                 BTFSS           SENSOR1
+000322 EF98 F001      00536                 GOTO            DIMINUI
+000326 A281           00537                 BTFSS           SENSOR2
+000328 EF4F F001      00538                 GOTO            LOP2
+00032C EF8D F001      00539                 GOTO            LOOP4
+000330                00540 DIMINUI
+000330 A481           00541                 BTFSS           BOTAO_1
+000332 EF5C F004      00542                 GOTO            TRATA_STOP
+000336 B081           00543                 BTFSC           SENSOR1
+000338 EFA0 F001      00544                 GOTO            DECREMENTANDO
+00033C EF98 F001      00545                 GOTO            DIMINUI
+000340                00546 DECREMENTANDO
+000340 060A           00547                 DECF            CONTAGEM
+000342 D8AB           00548                 RCALL           DECREMENTA
+000344 D805           00549                 RCALL           CORRIGE_VALOR
+000346 A481           00550                 BTFSS           BOTAO_1
+000348 EF5C F004      00551                 GOTO            TRATA_STOP
+00034C EF57 F001      00552                 GOTO            LOOP
+                      00553 
+000350                00554 CORRIGE_VALOR
+000350 948B           00555  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+000352 0EC8           00556  MOVLW 0XC8                     ;Define 5 Digito da Segunda Linha para começar a escrita
+000354 DE73           00557  RCALL ESCREVE          ;Envia o comando para o Microcontrolador
+                      00558 
+000356                00559 ATUALIZA
+000356 B01D           00560  BTFSC  MODO,0
+000358 D017           00561  BRA    ATUALIZA_METROS 
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00562 
+00035A 848B           00563  BSF RS
+00035C 5008           00564  MOVF CENT,W            ;Escreve numero Milhar no LCD
+00035E DE77           00565  RCALL TABELA_7S
+000360 DE6D           00566  RCALL ESCREVE
+                      00567 
+000362 5007           00568  MOVF DEZE,W    ;Escreve numero Centena no LCD
+000364 DE74           00569  RCALL TABELA_7S
+000366 DE6A           00570  RCALL ESCREVE
+                      00571 
+000368 5006           00572  MOVF UNID,W            ;Escreve numero DEZE no LCD
+00036A DE71           00573  RCALL TABELA_7S
+00036C DE67           00574  RCALL ESCREVE 
+                      00575 
+00036E 0E2C           00576  MOVLW ','                      ;Escreve ":" no LCD para dividir Minutos e Segundos
+000370 DE65           00577  RCALL ESCREVE 
+                      00578 
+000372 0E30           00579  MOVLW '0'
+000374 DE63           00580  RCALL ESCREVE
+000376 0E20           00581  MOVLW ' '
+000378 DE61           00582  RCALL ESCREVE
+00037A 0E63           00583  MOVLW 'c'
+00037C EC1E F000      00584  CALL ESCREVE
+000380 0E6D           00585  MOVLW 'm'
+000382 EC1E F000      00586  CALL ESCREVE
+Warning[203]: Found opcode in column 1. (RETURN)
+000386 0012           00587 RETURN
+                      00588 
+000388                00589 ATUALIZA_METROS
+000388 848B           00590  BSF RS
+00038A 5009           00591  MOVF MIL,W             ;Escreve numero Milhar no LCD
+00038C DE60           00592  RCALL TABELA_7S
+00038E DE56           00593  RCALL ESCREVE
+                      00594 
+000390 5008           00595  MOVF CENT,W            ;Escreve numero Milhar no LCD
+000392 DE5D           00596  RCALL TABELA_7S
+000394 DE53           00597  RCALL ESCREVE
+                      00598 
+000396 0E2C           00599  MOVLW ','                      ;Escreve ":" no LCD para dividir Minutos e Segundos
+000398 DE51           00600  RCALL ESCREVE 
+                      00601 
+00039A 5007           00602  MOVF DEZE,W    ;Escreve numero Centena no LCD
+00039C DE58           00603  RCALL TABELA_7S
+00039E DE4E           00604  RCALL ESCREVE
+                      00605 
+0003A0 5006           00606  MOVF UNID,W            ;Escreve numero DEZE no LCD
+0003A2 DE55           00607  RCALL TABELA_7S
+0003A4 DE4B           00608  RCALL ESCREVE 
+                      00609 
+0003A6 0E20           00610  MOVLW ' '
+0003A8 DE49           00611  RCALL ESCREVE
+0003AA 0E4D           00612  MOVLW 'M'
+0003AC EC1E F000      00613  CALL ESCREVE
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0003B0 0E20           00614  MOVLW ' '
+0003B2 EC1E F000      00615  CALL ESCREVE
+Warning[203]: Found opcode in column 1. (RETURN)
+0003B6 0012           00616 RETURN
+                      00617 
+                      00618 
+                      00619 
+                      00620 
+                      00621 
+                      00622 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00623 ; * TELA DE STOP *
+                      00624 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00625 
+0003B8                00626 TELA_STOP
+0003B8 948B           00627  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+0003BA 0E80           00628  MOVLW 0X80
+0003BC DE3F           00629  RCALL ESCREVE
+                      00630 
+0003BE 848B           00631  BSF RS
+0003C0 0E56           00632  MOVLW 'V'
+0003C2 DE3C           00633  RCALL ESCREVE
+0003C4 0E2E           00634  MOVLW '.'
+0003C6 DE3A           00635  RCALL ESCREVE
+0003C8 0E20           00636  MOVLW ' '
+0003CA DE38           00637  RCALL ESCREVE
+0003CC 0E4D           00638  MOVLW 'M'
+0003CE DE36           00639  RCALL ESCREVE
+0003D0 0E65           00640  MOVLW 'e'
+0003D2 DE34           00641  RCALL ESCREVE
+0003D4 0E64           00642  MOVLW 'd'
+0003D6 DE32           00643  RCALL ESCREVE
+0003D8 0E2E           00644  MOVLW '.'
+0003DA DE30           00645  RCALL ESCREVE
+0003DC 0E20           00646  MOVLW ' '
+0003DE DE2E           00647  RCALL ESCREVE
+                      00648 
+0003E0 ECAB F001      00649  CALL ATUALIZA
+                      00650 
+                      00651 
+                      00652 
+0003E4 948B           00653  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+0003E6 0EC0           00654  MOVLW 0XC0                     ;Define 5 Digito da Segunda Linha para começar a escrita
+0003E8 DE29           00655  RCALL ESCREVE          ;Envia o comando para o Microcontrolador
+                      00656 
+0003EA 848B           00657  BSF RS
+0003EC 0E5A           00658  MOVLW 'Z'
+0003EE DE26           00659  RCALL ESCREVE
+0003F0 0E65           00660  MOVLW 'e'
+0003F2 DE24           00661  RCALL ESCREVE
+0003F4 0E72           00662  MOVLW 'r'
+0003F6 DE22           00663  RCALL ESCREVE
+0003F8 0E61           00664  MOVLW 'a'
+0003FA DE20           00665  RCALL ESCREVE
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0003FC 0E72           00666  MOVLW 'r'
+0003FE DE1E           00667  RCALL ESCREVE
+000400 0E20           00668  MOVLW ' '
+000402 DE1C           00669  RCALL ESCREVE
+000404 0E4D           00670  MOVLW 'M'
+000406 DE1A           00671  RCALL ESCREVE
+000408 0E31           00672  MOVLW '1'
+00040A DE18           00673  RCALL ESCREVE
+00040C 0E20           00674  MOVLW ' '
+00040E DE16           00675  RCALL ESCREVE
+000410 0E20           00676  MOVLW ' '
+000412 DE14           00677  RCALL ESCREVE
+000414 0E4D           00678  MOVLW 'M'
+000416 DE12           00679  RCALL ESCREVE
+000418 0E32           00680  MOVLW '2'
+00041A DE10           00681  RCALL ESCREVE
+00041C 0E20           00682  MOVLW ' '
+00041E DE0E           00683  RCALL ESCREVE
+000420 0E20           00684  MOVLW ' '
+000422 DE0C           00685  RCALL ESCREVE
+000424 0E20           00686  MOVLW ' '
+000426 DE0A           00687  RCALL ESCREVE
+000428 0E20           00688  MOVLW ' '
+00042A DE08           00689  RCALL ESCREVE
+                      00690 
+Warning[203]: Found opcode in column 1. (RETURN)
+00042C 0012           00691 RETURN
+                      00692 
+                      00693 
+                      00694 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00695 ; * CONFIGURA??ES INICIAIS DE HARDWARE E SOFTWARE *
+                      00696 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+00042E                00697 CONFIGURACAO
+00042E 0EFF           00698  MOVLW B'11111111'
+000430 6E93           00699  MOVWF TRISB
+000432 0E00           00700  MOVLW B'00000000'
+000434 6E95           00701  MOVWF TRISD
+000436 0E04           00702  MOVLW B'00000100'
+000438 6E96           00703  MOVWF TRISE
+00043A 0EC1           00704  MOVLW B'11000001'
+00043C 6E92           00705  MOVWF TRISA
+00043E 0E20           00706  MOVLW B'00100000'
+000440 6E94           00707  MOVWF TRISC
+                      00708 
+000442 6A8A           00709  CLRF LATB
+000444 6A8C           00710  CLRF LATD
+000446 6A89           00711  CLRF LATA
+000448 6A8D           00712  CLRF LATE
+00044A DDEA           00713  RCALL INICIALIZACAO_DISPLAY
+00044C 0E80           00714  MOVLW          H'80'                                           ;w = 80h
+00044E 6EF2           00715  MOVWF          INTCON                                          ;CONFIGURA INTCON...
+                      00716 
+000450 0E00           00717         MOVLW           D'0'                                            ;move a literal 0d para work
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000452 6E01           00718         MOVWF           TMR0                                            ;inicializa TMR0 em 10d. Timer0 
+                            = 256 - 10 = 246
+                      00719         
+000454 0E80           00720         MOVLW           D'128'                                          ;move a literal 128d para work
+000456 6E00           00721         MOVWF           COUNTER1                                        ;inicializa counter1 em 18d
+000458 EF35 F000      00722  GOTO MOSTRA_TELA_PRINCIPAL 
+                      00723 
+                      00724 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00725 ; * ROTINA INCREMENTA CONTADOR *
+                      00726 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+00045C                00727 INCREMENTA
+00045C 2A06           00728  INCF UNID,F
+00045E 0E0A           00729  MOVLW MAX1
+000460 1806           00730  XORWF UNID,W
+000462 A4D8           00731  BTFSS STATUS,Z
+000464 0012           00732  RETURN
+000466 6A06           00733  CLRF UNID
+                      00734  
+000468 2A07           00735  INCF DEZE,F
+00046A 0E06           00736  MOVLW MAX2
+00046C 1807           00737  XORWF DEZE,W
+00046E A4D8           00738  BTFSS STATUS,Z
+000470 0012           00739  RETURN
+000472 6A06           00740  CLRF UNID
+000474 6A07           00741  CLRF DEZE
+                      00742  
+000476 2A08           00743  INCF CENT,F
+000478 0E0A           00744  MOVLW MAX1
+00047A 1808           00745  XORWF CENT,W
+00047C A4D8           00746  BTFSS STATUS,Z
+00047E 0012           00747  RETURN
+000480 6A06           00748  CLRF UNID
+000482 6A07           00749  CLRF DEZE
+000484 6A08           00750  CLRF CENT 
+                      00751 
+000486 2A09           00752  INCF MIL,F
+000488 0E06           00753  MOVLW MAX2
+00048A 1809           00754  XORWF MIL,W
+00048C A4D8           00755  BTFSS STATUS,Z
+00048E 0012           00756  RETURN
+000490 6A06           00757  CLRF UNID
+000492 6A07           00758  CLRF DEZE
+000494 6A08           00759  CLRF CENT
+000496 6A09           00760  CLRF MIL 
+                      00761 
+000498 0012           00762  RETURN
+                      00763 
+                      00764 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00765 ; * ROTINA DECREMENTA CONTADOR *
+                      00766 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+00049A                00767 DECREMENTA
+00049A 6606           00768  TSTFSZ  UNID;
+00049C D003           00769  BRA $+.8
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00049E 0E09           00770  MOVLW  .9
+0004A0 6E06           00771  MOVWF  UNID
+0004A2 D002           00772  BRA $+.6
+0004A4 0606           00773  DECF UNID,F 
+0004A6 0012           00774  RETURN
+                      00775 
+0004A8 6607           00776  TSTFSZ  DEZE;
+0004AA D003           00777  BRA $+.8
+0004AC 0E09           00778  MOVLW  .9
+0004AE 6E07           00779  MOVWF  DEZE
+0004B0 D002           00780  BRA $+.6
+0004B2 0607           00781  DECF DEZE,F 
+0004B4 0012           00782  RETURN
+                      00783  
+                      00784  
+0004B6 6608           00785  TSTFSZ  CENT;
+0004B8 D003           00786  BRA $+.8
+0004BA 0E09           00787  MOVLW  .9
+0004BC 6E08           00788  MOVWF  CENT
+0004BE D002           00789  BRA $+.6
+0004C0 0608           00790  DECF CENT,F 
+0004C2 0012           00791  RETURN
+                      00792 
+0004C4 6609           00793  TSTFSZ  MIL;
+0004C6 D006           00794  BRA $+.14
+0004C8 6A06           00795  CLRF UNID
+0004CA 6A07           00796  CLRF DEZE
+0004CC 6A08           00797  CLRF CENT
+0004CE 6A09           00798  CLRF MIL
+0004D0 6A0A           00799  CLRF CONTAGEM
+0004D2 0012           00800  RETURN
+0004D4 0609           00801  DECF MIL,F 
+0004D6 0012           00802  RETURN
+                      00803 
+                      00804 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00805 ; * ROTINA SALVAR MEMORIA 1 *
+                      00806 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00807 
+0004D8                00808 SALVAR_M1
+0004D8 C006 F00B      00809  MOVFF UNID, MEMORIA_UNID1
+0004DC C007 F00C      00810  MOVFF DEZE, MEMORIA_DEZ1
+0004E0 C008 F00D      00811  MOVFF CENT, MEMORIA_CENT1
+0004E4 C009 F00E      00812  MOVFF MIL, MEMORIA_MIL1
+0004E8 C00A F00F      00813  MOVFF CONTAGEM, CONTAGEM1
+                      00814 
+0004EC 948B           00815  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+0004EE 0E80           00816  MOVLW 0X80
+0004F0 DDA5           00817  RCALL ESCREVE
+                      00818 
+0004F2 848B           00819  BSF RS
+0004F4 0E4D           00820  MOVLW 'M'
+0004F6 DDA2           00821  RCALL ESCREVE
+0004F8 0E31           00822  MOVLW '1'
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0004FA DDA0           00823  RCALL ESCREVE
+0004FC 0E20           00824  MOVLW ' '
+0004FE DD9E           00825  RCALL ESCREVE
+000500 0E41           00826  MOVLW 'A'
+000502 DD9C           00827  RCALL ESCREVE
+000504 0E72           00828  MOVLW 'r'
+000506 DD9A           00829  RCALL ESCREVE
+000508 0E6D           00830  MOVLW 'm'
+00050A DD98           00831  RCALL ESCREVE
+00050C 0E61           00832  MOVLW 'a'
+00050E DD96           00833  RCALL ESCREVE
+000510 0E7A           00834  MOVLW 'z'
+000512 DD94           00835  RCALL ESCREVE
+000514 0E65           00836  MOVLW 'e'
+000516 DD92           00837  RCALL ESCREVE
+000518 0E6E           00838  MOVLW 'n'
+00051A DD90           00839  RCALL ESCREVE
+00051C 0E61           00840  MOVLW 'a'
+00051E DD8E           00841  RCALL ESCREVE
+000520 0E64           00842  MOVLW 'd'
+000522 DD8C           00843  RCALL ESCREVE
+000524 0E61           00844  MOVLW 'a'
+000526 DD8A           00845  RCALL ESCREVE
+000528 0E20           00846  MOVLW ' '
+00052A DD88           00847  RCALL ESCREVE
+00052C 0E20           00848  MOVLW ' '
+00052E DD86           00849  RCALL ESCREVE
+000530 0E20           00850  MOVLW ' '
+000532 DD84           00851  RCALL ESCREVE
+                      00852 
+000534 948B           00853  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+000536 0EC0           00854  MOVLW 0XC0                     ;Define 5 Digito da Segunda Linha para começar a escrita
+000538 DD81           00855  RCALL ESCREVE          ;Envia o comando para o Microcontrolador
+                      00856 
+00053A 848B           00857  BSF RS
+00053C 0E20           00858  MOVLW ' '
+00053E DD7E           00859  RCALL ESCREVE
+000540 0E56           00860  MOVLW 'V'
+000542 DD7C           00861  RCALL ESCREVE
+000544 0E61           00862  MOVLW 'a'
+000546 DD7A           00863  RCALL ESCREVE
+000548 0E6C           00864  MOVLW 'l'
+00054A DD78           00865  RCALL ESCREVE
+00054C 0E6F           00866  MOVLW 'o'
+00054E DD76           00867  RCALL ESCREVE
+000550 0E72           00868  MOVLW 'r'
+000552 DD74           00869  RCALL ESCREVE
+000554 0E3A           00870  MOVLW ':'
+000556 DD72           00871  RCALL ESCREVE
+000558 0E20           00872  MOVLW ' '
+00055A DD70           00873  RCALL ESCREVE
+                      00874 
+Warning[203]: Found opcode in column 1. (CALL)
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00055C ECAB F001      00875 CALL ATUALIZA
+                      00876 
+Warning[202]: Argument out of range.  Least significant bits used.
+000560 0EB8           00877  MOVLW .3000
+000562 DD50           00878  RCALL DELAY_MS
+                      00879 
+Warning[202]: Argument out of range.  Least significant bits used.
+000564 0EB8           00880  MOVLW .3000
+000566 DD4E           00881  RCALL DELAY_MS
+                      00882 
+Warning[202]: Argument out of range.  Least significant bits used.
+000568 0EB8           00883  MOVLW .3000
+00056A DD4C           00884  RCALL DELAY_MS
+                      00885 
+Warning[203]: Found opcode in column 1. (RCALL)
+00056C DF25           00886 RCALL TELA_STOP
+Warning[203]: Found opcode in column 1. (RETURN)
+00056E 0012           00887 RETURN
+                      00888 
+                      00889 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00890 ; * ROTINA SALVAR MEMORIA 1 *
+                      00891 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00892 
+000570                00893 SALVAR_M2
+                      00894 
+Warning[203]: Found opcode in column 1. (BTFSS)
+000570 A01D           00895 BTFSS MODO,0
+Warning[203]: Found opcode in column 1. (GOTO)
+000572 EFB7 F003      00896 GOTO ERRO_MEMORIA2
+                      00897 
+000576 C006 F010      00898  MOVFF UNID, MEMORIA_UNID2
+00057A C007 F011      00899  MOVFF DEZE, MEMORIA_DEZ2
+00057E C008 F012      00900  MOVFF CENT, MEMORIA_CENT2
+000582 C009 F013      00901  MOVFF MIL, MEMORIA_MIL2
+000586 C00A F014      00902  MOVFF CONTAGEM, CONTAGEM2
+                      00903 
+00058A 948B           00904  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+00058C 0E80           00905  MOVLW 0X80
+00058E DD56           00906  RCALL ESCREVE
+                      00907 
+000590 848B           00908  BSF RS
+000592 0E4D           00909  MOVLW 'M'
+000594 DD53           00910  RCALL ESCREVE
+000596 0E32           00911  MOVLW '2'
+000598 DD51           00912  RCALL ESCREVE
+00059A 0E20           00913  MOVLW ' '
+00059C DD4F           00914  RCALL ESCREVE
+00059E 0E41           00915  MOVLW 'A'
+0005A0 DD4D           00916  RCALL ESCREVE
+0005A2 0E72           00917  MOVLW 'r'
+0005A4 DD4B           00918  RCALL ESCREVE
+0005A6 0E6D           00919  MOVLW 'm'
+0005A8 DD49           00920  RCALL ESCREVE
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0005AA 0E61           00921  MOVLW 'a'
+0005AC DD47           00922  RCALL ESCREVE
+0005AE 0E7A           00923  MOVLW 'z'
+0005B0 DD45           00924  RCALL ESCREVE
+0005B2 0E65           00925  MOVLW 'e'
+0005B4 DD43           00926  RCALL ESCREVE
+0005B6 0E6E           00927  MOVLW 'n'
+0005B8 DD41           00928  RCALL ESCREVE
+0005BA 0E61           00929  MOVLW 'a'
+0005BC DD3F           00930  RCALL ESCREVE
+0005BE 0E64           00931  MOVLW 'd'
+0005C0 DD3D           00932  RCALL ESCREVE
+0005C2 0E61           00933  MOVLW 'a'
+0005C4 DD3B           00934  RCALL ESCREVE
+0005C6 0E20           00935  MOVLW ' '
+0005C8 DD39           00936  RCALL ESCREVE
+0005CA 0E20           00937  MOVLW ' '
+0005CC DD37           00938  RCALL ESCREVE
+0005CE 0E20           00939  MOVLW ' '
+0005D0 DD35           00940  RCALL ESCREVE
+                      00941 
+0005D2 948B           00942  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+0005D4 0EC0           00943  MOVLW 0XC0                     ;Define 5 Digito da Segunda Linha para começar a escrita
+0005D6 DD32           00944  RCALL ESCREVE          ;Envia o comando para o Microcontrolador
+                      00945 
+0005D8 848B           00946  BSF RS
+0005DA 0E20           00947  MOVLW ' '
+0005DC DD2F           00948  RCALL ESCREVE
+0005DE 0E56           00949  MOVLW 'V'
+0005E0 DD2D           00950  RCALL ESCREVE
+0005E2 0E61           00951  MOVLW 'a'
+0005E4 DD2B           00952  RCALL ESCREVE
+0005E6 0E6C           00953  MOVLW 'l'
+0005E8 DD29           00954  RCALL ESCREVE
+0005EA 0E6F           00955  MOVLW 'o'
+0005EC DD27           00956  RCALL ESCREVE
+0005EE 0E72           00957  MOVLW 'r'
+0005F0 DD25           00958  RCALL ESCREVE
+0005F2 0E3A           00959  MOVLW ':'
+0005F4 DD23           00960  RCALL ESCREVE
+0005F6 0E20           00961  MOVLW ' '
+0005F8 DD21           00962  RCALL ESCREVE
+                      00963 
+Warning[203]: Found opcode in column 1. (CALL)
+0005FA ECAB F001      00964 CALL ATUALIZA
+                      00965 
+Warning[202]: Argument out of range.  Least significant bits used.
+0005FE 0EB8           00966  MOVLW .3000
+000600 DD01           00967  RCALL DELAY_MS
+                      00968 
+Warning[202]: Argument out of range.  Least significant bits used.
+000602 0EB8           00969  MOVLW .3000
+000604 DCFF           00970  RCALL DELAY_MS
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00971 
+Warning[202]: Argument out of range.  Least significant bits used.
+000606 0EB8           00972  MOVLW .3000
+000608 DCFD           00973  RCALL DELAY_MS
+                      00974 
+Warning[203]: Found opcode in column 1. (RCALL)
+00060A DED6           00975 RCALL TELA_STOP
+Warning[203]: Found opcode in column 1. (RETURN)
+00060C 0012           00976 RETURN
+                      00977 
+                      00978 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00979 ; * CALCULO DA AREA *
+                      00980 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      00981 
+                      00982 
+00060E                00983 CALC_AREA
+                      00984 
+Warning[203]: Found opcode in column 1. (BTFSS)
+00060E A01D           00985 BTFSS MODO,0
+Warning[203]: Found opcode in column 1. (GOTO)
+000610 EF67 F003      00986 GOTO ERRO_MODO
+                      00987 
+000614 C00F F015      00988         MOVFF           CONTAGEM1, A0                                                   ;A0 = número
+000618 C014 F016      00989         MOVFF           CONTAGEM2, B0                                                   ;A0 = número
+00061C EC1A F004      00990         CALL            mult                                            ;chama sub-rotina de multiplicaç
+                            ão
+000620 5017           00991         MOVF            C0,W                                                                    
+000622 EC27 F004      00992         CALL            conv_binToDec
+                      00993 
+000626 948B           00994  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+000628 0E80           00995  MOVLW 0X80
+00062A DD08           00996  RCALL ESCREVE
+                      00997 
+00062C 848B           00998  BSF RS
+00062E 0E41           00999  MOVLW 'A'
+000630 DD05           01000  RCALL ESCREVE
+000632 0E72           01001  MOVLW 'r'
+000634 DD03           01002  RCALL ESCREVE
+000636 0E65           01003  MOVLW 'e'
+000638 DD01           01004  RCALL ESCREVE
+00063A 0E61           01005  MOVLW 'a'
+00063C DCFF           01006  RCALL ESCREVE
+00063E 0E20           01007  MOVLW ' '
+000640 DCFD           01008  RCALL ESCREVE
+000642 0E43           01009  MOVLW 'C'
+000644 DCFB           01010  RCALL ESCREVE
+000646 0E61           01011  MOVLW 'a'
+000648 DCF9           01012  RCALL ESCREVE
+00064A 0E6C           01013  MOVLW 'l'
+00064C DCF7           01014  RCALL ESCREVE
+00064E 0E63           01015  MOVLW 'c'
+000650 DCF5           01016  RCALL ESCREVE
+000652 0E75           01017  MOVLW 'u'
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000654 DCF3           01018  RCALL ESCREVE
+000656 0E6C           01019  MOVLW 'l'
+000658 DCF1           01020  RCALL ESCREVE
+00065A 0E61           01021  MOVLW 'a'
+00065C DCEF           01022  RCALL ESCREVE
+00065E 0E64           01023  MOVLW 'd'
+000660 DCED           01024  RCALL ESCREVE
+000662 0E61           01025  MOVLW 'a'
+000664 DCEB           01026  RCALL ESCREVE
+000666 0E3A           01027  MOVLW ':'
+000668 DCE9           01028  RCALL ESCREVE
+00066A 0E20           01029  MOVLW ' '
+00066C DCE7           01030  RCALL ESCREVE
+                      01031 
+00066E 948B           01032  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+000670 0EC0           01033  MOVLW 0XC0                     ;Define 5 Digito da Segunda Linha para começar a escrita
+000672 DCE4           01034  RCALL ESCREVE          ;Envia o comando para o Microcontrolador
+                      01035 
+000674 848B           01036  BSF RS
+000676 0E56           01037  MOVLW 'V'
+000678 DCE1           01038  RCALL ESCREVE
+00067A 0E61           01039  MOVLW 'a'
+00067C DCDF           01040  RCALL ESCREVE
+00067E 0E6C           01041  MOVLW 'l'
+000680 DCDD           01042  RCALL ESCREVE
+000682 0E6F           01043  MOVLW 'o'
+000684 DCDB           01044  RCALL ESCREVE
+000686 0E72           01045  MOVLW 'r'
+000688 DCD9           01046  RCALL ESCREVE
+00068A 0E3A           01047  MOVLW ':'
+00068C DCD7           01048  RCALL ESCREVE
+00068E 0E20           01049  MOVLW ' '
+000690 DCD5           01050  RCALL ESCREVE
+000692 0E20           01051  MOVLW ' '
+000694 DCD3           01052  RCALL ESCREVE
+                      01053 
+                      01054 
+000696 5009           01055  MOVF MIL,W             ;Escreve numero Milhar no LCD
+000698 DCDA           01056  RCALL TABELA_7S
+00069A DCD0           01057  RCALL ESCREVE
+                      01058 
+00069C 501C           01059  MOVF CEN,W     ;Escreve numero Centena no LCD
+00069E DCD7           01060  RCALL TABELA_7S
+0006A0 DCCD           01061  RCALL ESCREVE
+                      01062 
+0006A2 501B           01063  MOVF DEZ,W             ;Escreve numero DEZE no LCD
+0006A4 DCD4           01064  RCALL TABELA_7S
+0006A6 DCCA           01065  RCALL ESCREVE 
+                      01066 
+0006A8 0E2C           01067  MOVLW ','                      ;Escreve "," no LCD
+0006AA DCC8           01068  RCALL ESCREVE 
+                      01069 
+0006AC 501A           01070  MOVF UNI,W     ;Escreve numero UNID no LCD
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0006AE DCCF           01071  RCALL TABELA_7S
+0006B0 DCC5           01072  RCALL ESCREVE
+                      01073 
+0006B2 0E20           01074  MOVLW ' '
+0006B4 DCC3           01075  RCALL ESCREVE
+                      01076 
+0006B6 0E20           01077  MOVLW ' '
+0006B8 DCC1           01078  RCALL ESCREVE
+0006BA 0E4D           01079  MOVLW 'M'
+0006BC DCBF           01080  RCALL ESCREVE
+                      01081 
+                      01082 
+Warning[202]: Argument out of range.  Least significant bits used.
+0006BE 0EB8           01083  MOVLW .3000
+0006C0 DCA1           01084  RCALL DELAY_MS
+                      01085 
+Warning[202]: Argument out of range.  Least significant bits used.
+0006C2 0EB8           01086  MOVLW .3000
+0006C4 DC9F           01087  RCALL DELAY_MS
+                      01088 
+Warning[202]: Argument out of range.  Least significant bits used.
+0006C6 0EB8           01089  MOVLW .3000
+0006C8 DC9D           01090  RCALL DELAY_MS
+                      01091 
+0006CA EF60 F004      01092  GOTO STOP_BOTOES
+                      01093 
+                      01094 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      01095 ; * TELA ERRO NO MODO ESCOLHIDO *
+                      01096 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      01097 
+0006CE                01098 ERRO_MODO
+0006CE 948B           01099  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+0006D0 0E80           01100  MOVLW 0X80
+0006D2 DCB4           01101  RCALL ESCREVE
+                      01102 
+0006D4 848B           01103  BSF RS
+0006D6 0E41           01104  MOVLW 'A'
+0006D8 DCB1           01105  RCALL ESCREVE
+0006DA 0E72           01106  MOVLW 'r'
+0006DC DCAF           01107  RCALL ESCREVE
+0006DE 0E65           01108  MOVLW 'e'
+0006E0 DCAD           01109  RCALL ESCREVE
+0006E2 0E61           01110  MOVLW 'a'
+0006E4 DCAB           01111  RCALL ESCREVE
+0006E6 0E20           01112  MOVLW ' '
+0006E8 DCA9           01113  RCALL ESCREVE
+0006EA 0E43           01114  MOVLW 'C'
+0006EC DCA7           01115  RCALL ESCREVE
+0006EE 0E61           01116  MOVLW 'a'
+0006F0 DCA5           01117  RCALL ESCREVE
+0006F2 0E6C           01118  MOVLW 'l'
+0006F4 DCA3           01119  RCALL ESCREVE
+0006F6 0E63           01120  MOVLW 'c'
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 23
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0006F8 DCA1           01121  RCALL ESCREVE
+0006FA 0E75           01122  MOVLW 'u'
+0006FC DC9F           01123  RCALL ESCREVE
+0006FE 0E6C           01124  MOVLW 'l'
+000700 DC9D           01125  RCALL ESCREVE
+000702 0E61           01126  MOVLW 'a'
+000704 DC9B           01127  RCALL ESCREVE
+000706 0E64           01128  MOVLW 'd'
+000708 DC99           01129  RCALL ESCREVE
+00070A 0E61           01130  MOVLW 'a'
+00070C DC97           01131  RCALL ESCREVE
+00070E 0E3A           01132  MOVLW ':'
+000710 DC95           01133  RCALL ESCREVE
+000712 0E20           01134  MOVLW ' '
+000714 DC93           01135  RCALL ESCREVE
+                      01136 
+000716 948B           01137  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+000718 0EC0           01138  MOVLW 0XC0                     ;Define 5 Digito da Segunda Linha para começar a escrita
+00071A DC90           01139  RCALL ESCREVE          ;Envia o comando para o Microcontrolador
+                      01140 
+00071C 848B           01141  BSF RS
+00071E 0E53           01142  MOVLW 'S'
+000720 DC8D           01143  RCALL ESCREVE
+000722 0E74           01144  MOVLW 't'
+000724 DC8B           01145  RCALL ESCREVE
+000726 0E61           01146  MOVLW 'a'
+000728 DC89           01147  RCALL ESCREVE
+00072A 0E72           01148  MOVLW 'r'
+00072C DC87           01149  RCALL ESCREVE
+00072E 0E74           01150  MOVLW 't'
+000730 DC85           01151  RCALL ESCREVE
+000732 0E20           01152  MOVLW ' '
+000734 DC83           01153  RCALL ESCREVE
+000736 0E45           01154  MOVLW 'E'
+000738 DC81           01155  RCALL ESCREVE
+00073A 0E72           01156  MOVLW 'r'
+00073C DC7F           01157  RCALL ESCREVE
+00073E 0E72           01158  MOVLW 'r'
+000740 DC7D           01159  RCALL ESCREVE
+000742 0E6F           01160  MOVLW 'o'
+000744 DC7B           01161  RCALL ESCREVE
+000746 0E2D           01162  MOVLW '-'
+000748 DC79           01163  RCALL ESCREVE
+00074A 0E4D           01164  MOVLW 'M'
+00074C DC77           01165  RCALL ESCREVE
+00074E 0E6F           01166  MOVLW 'o'
+000750 DC75           01167  RCALL ESCREVE
+000752 0E64           01168  MOVLW 'd'
+000754 DC73           01169  RCALL ESCREVE
+000756 0E6F           01170  MOVLW 'o'
+000758 DC71           01171  RCALL ESCREVE
+00075A 0E21           01172  MOVLW '!'
+00075C DC6F           01173  RCALL ESCREVE
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 24
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      01174 
+                      01175 
+Warning[202]: Argument out of range.  Least significant bits used.
+00075E 0EB8           01176  MOVLW .3000
+000760 DC51           01177  RCALL DELAY_MS
+                      01178 
+Warning[202]: Argument out of range.  Least significant bits used.
+000762 0EB8           01179  MOVLW .3000
+000764 DC4F           01180  RCALL DELAY_MS
+                      01181 
+Warning[202]: Argument out of range.  Least significant bits used.
+000766 0EB8           01182  MOVLW .3000
+000768 DC4D           01183  RCALL DELAY_MS
+Warning[203]: Found opcode in column 1. (GOTO)
+00076A EFDC F001      01184 GOTO TELA_STOP
+                      01185 
+                      01186 
+                      01187 
+                      01188 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      01189 ; * TELA ERRO MEMORIA 2 EM CENTIMETROS *
+                      01190 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      01191 
+00076E                01192 ERRO_MEMORIA2
+00076E 948B           01193  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+000770 0E80           01194  MOVLW 0X80
+000772 DC64           01195  RCALL ESCREVE
+                      01196 
+000774 848B           01197  BSF RS
+000776 0E4D           01198  MOVLW 'M'
+000778 DC61           01199  RCALL ESCREVE
+00077A 0E65           01200  MOVLW 'e'
+00077C DC5F           01201  RCALL ESCREVE
+00077E 0E6D           01202  MOVLW 'm'
+000780 DC5D           01203  RCALL ESCREVE
+000782 0E6F           01204  MOVLW 'o'
+000784 DC5B           01205  RCALL ESCREVE
+000786 0E72           01206  MOVLW 'r'
+000788 DC59           01207  RCALL ESCREVE
+00078A 0E69           01208  MOVLW 'i'
+00078C DC57           01209  RCALL ESCREVE
+00078E 0E61           01210  MOVLW 'a'
+000790 DC55           01211  RCALL ESCREVE
+000792 0E20           01212  MOVLW ' '
+000794 DC53           01213  RCALL ESCREVE
+000796 0E32           01214  MOVLW '2'
+000798 DC51           01215  RCALL ESCREVE
+00079A 0E20           01216  MOVLW ' '
+00079C DC4F           01217  RCALL ESCREVE
+00079E 0E61           01218  MOVLW 'a'
+0007A0 DC4D           01219  RCALL ESCREVE
+0007A2 0E50           01220  MOVLW 'P'
+0007A4 DC4B           01221  RCALL ESCREVE
+0007A6 0E65           01222  MOVLW 'e'
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 25
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0007A8 DC49           01223  RCALL ESCREVE
+0007AA 0E6E           01224  MOVLW 'n'
+0007AC DC47           01225  RCALL ESCREVE
+0007AE 0E61           01226  MOVLW 'a'
+0007B0 DC45           01227  RCALL ESCREVE
+0007B2 0E73           01228  MOVLW 's'
+0007B4 DC43           01229  RCALL ESCREVE
+                      01230 
+0007B6 948B           01231  BCF RS                         ;Muda modo de funcionamento para Enviar Comandos
+0007B8 0EC0           01232  MOVLW 0XC0                     ;Define 5 Digito da Segunda Linha para começar a escrita
+0007BA DC40           01233  RCALL ESCREVE          ;Envia o comando para o Microcontrolador
+                      01234 
+0007BC 848B           01235  BSF RS
+0007BE 0E70           01236  MOVLW 'p'
+0007C0 EC1E F000      01237  CALL ESCREVE
+0007C4 0E61           01238  MOVLW 'a'
+0007C6 EC1E F000      01239  CALL ESCREVE
+0007CA 0E72           01240  MOVLW 'r'
+0007CC EC1E F000      01241  CALL ESCREVE
+0007D0 0E61           01242  MOVLW 'a'
+0007D2 EC1E F000      01243  CALL ESCREVE
+0007D6 0E20           01244  MOVLW ' '
+0007D8 EC1E F000      01245  CALL ESCREVE
+0007DC 0E6D           01246  MOVLW 'm'
+0007DE EC1E F000      01247  CALL ESCREVE
+0007E2 0E65           01248  MOVLW 'e'
+0007E4 EC1E F000      01249  CALL ESCREVE
+0007E8 0E74           01250  MOVLW 't'
+0007EA EC1E F000      01251  CALL ESCREVE
+0007EE 0E72           01252  MOVLW 'r'
+0007F0 EC1E F000      01253  CALL ESCREVE
+0007F4 0E6F           01254  MOVLW 'o'
+0007F6 EC1E F000      01255  CALL ESCREVE
+0007FA 0E73           01256  MOVLW 's'
+0007FC EC1E F000      01257  CALL ESCREVE
+000800 0E20           01258  MOVLW ' '
+000802 EC1E F000      01259  CALL ESCREVE
+000806 0E20           01260  MOVLW ' '
+000808 EC1E F000      01261  CALL ESCREVE
+00080C 0E20           01262  MOVLW ' '
+00080E EC1E F000      01263  CALL ESCREVE
+000812 0E20           01264  MOVLW ' '
+000814 EC1E F000      01265  CALL ESCREVE
+000818 0E20           01266  MOVLW ' '
+00081A EC1E F000      01267  CALL ESCREVE
+                      01268 
+                      01269 
+Warning[202]: Argument out of range.  Least significant bits used.
+00081E 0EB8           01270  MOVLW .3000
+000820 EC02 F000      01271  CALL DELAY_MS
+                      01272 
+Warning[202]: Argument out of range.  Least significant bits used.
+000824 0EB8           01273  MOVLW .3000
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 26
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000826 EC02 F000      01274  CALL DELAY_MS
+                      01275 
+Warning[202]: Argument out of range.  Least significant bits used.
+00082A 0EB8           01276  MOVLW .3000
+00082C EC02 F000      01277  CALL DELAY_MS
+Warning[203]: Found opcode in column 1. (GOTO)
+000830 EFDC F001      01278 GOTO TELA_STOP
+                      01279 
+                      01280 
+                      01281 
+                      01282 
+000834                01283 mult:
+000834 6A17           01284         clrf            C0                                                      ;limpa conteúdo do regis
+                            trador C0
+000836 6A18           01285         clrf            C1                                                      ;limpa conteúdo do regis
+                            trador C1
+000838 5015           01286         movf            A0,W                                            ;envia o conteúdo de A0 para W
+00083A 6E17           01287         movwf           C0                                                      ;envia o conteúdo de W p
+                            ara C0
+                      01288         
+00083C                01289 loop_mult:
+00083C 0616           01290         decf            B0,F                                            ;decrementa B0
+00083E B4D8           01291         btfsc           STATUS,Z                                        ;B0 igual a zero?
+000840 0012           01292         return                                                                  ;Sim, retorna
+000842 5015           01293         movf            A0,W                                            ;copia A0 para W
+000844 2617           01294         addwf           C0,F                                            ;Soma A0 com C0 e armazena resul
+                            tado em C0
+000846 B0D8           01295         btfsc           STATUS,C                                        ;Houve transbordo em C0?
+000848 2A18           01296         incf            C1,F                                            ;Sim, incrementa C1
+00084A EF1E F004      01297         goto            loop_mult                                       ;Vai para label loop_mult
+                      01298 
+                      01299 
+                      01300 
+                      01301 
+00084E                01302 conv_binToDec:
+                      01303 
+00084E 6E19           01304         movwf           REG_AUX                                         ;salva valor a converter em REG_
+                            AUX
+000850 6A1A           01305         clrf            UNI                                                     ;limpa unidade
+000852 6A1B           01306         clrf            DEZ                                                     ;limpa dezena
+000854 6A1C           01307         clrf            CEN                                                     ;limpa centena
+                      01308 
+000856 5219           01309         movf            REG_AUX,F                                       ;REG_AUX = REG_AUX
+000858 B4D8           01310         btfsc           STATUS,Z                                        ;valor a converter resultou em z
+                            ero?
+00085A 0012           01311         return                                                                  ;Sim. Retorna
+                      01312 
+00085C                01313 start_adj:
+                      01314                                                 
+00085C 2A1A           01315         incf            UNI,F                                           ;Não. Incrementa UNI
+00085E 501A           01316         movf            UNI,W                                           ;move o conteúdo de UNI para Wor
+                            k
+000860 0A0A           01317         xorlw           H'0A'                                           ;W = UNI XOR 10d
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 27
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000862 A4D8           01318         btfss           STATUS,Z                                        ;Resultou em 10d?
+000864 EF3F F004      01319         goto            end_adj                                         ;Não. Desvia para end_adj
+                      01320                                                  
+000868 6A1A           01321         clrf            UNI                                                     ;Sim. Limpa registrador 
+                            UNI
+00086A 501B           01322         movf            DEZ,W                                           ;Move o conteúdo de DEZ para Wor
+                            k
+00086C 0A09           01323         xorlw           H'09'                                           ;W = DEZ_A XOR 9d
+00086E A4D8           01324         btfss           STATUS,Z                                        ;Resultou em 9d?
+000870 EF3E F004      01325         goto            incDezA                                         ;Não, valor menor que 9. Increme
+                            nta DEZ_A
+000874 6A1B           01326         clrf            DEZ                                                     ;Sim. Limpa registrador 
+                            DEZ
+000876 2A1C           01327         incf            CEN,F                                           ;Incrementa registrador CEN
+000878 EF3F F004      01328         goto            end_adj                                         ;Desvia para end_adj
+                      01329         
+00087C                01330 incDezA:
+00087C 2A1B           01331         incf            DEZ,F                                           ;Incrementa DEZ
+                      01332         
+00087E                01333 end_adj:
+00087E 2E19           01334         decfsz          REG_AUX,F                                       ;Decrementa REG_AUX. Fim da conv
+                            ersão ?
+000880 EF2E F004      01335         goto            start_adj                                       ;Não. Continua
+000884 0012           01336         return  
+                      01337 
+000886                01338 DEFINE_UNID
+000886 B01D           01339  BTFSC  MODO,0
+000888 D00F           01340  BRA    METROS 
+                      01341 
+00088A 848B           01342  BSF RS
+00088C 0E63           01343  MOVLW 'c'
+00088E EC1E F000      01344  CALL ESCREVE
+000892 0E6D           01345  MOVLW 'm'
+000894 EC1E F000      01346  CALL ESCREVE
+000898 0E20           01347  MOVLW ' '
+00089A EC1E F000      01348  CALL ESCREVE
+00089E 0E20           01349  MOVLW ' '
+0008A0 EC1E F000      01350  CALL ESCREVE
+0008A4 EF07 F001      01351  GOTO DELAYS
+                      01352 
+0008A8                01353 METROS 
+0008A8 848B           01354  BSF RS
+0008AA 0E20           01355  MOVLW ' '
+0008AC EC1E F000      01356  CALL ESCREVE
+0008B0 0E4D           01357  MOVLW 'M'
+0008B2 EC1E F000      01358  CALL ESCREVE
+Warning[203]: Found opcode in column 1. (RETURN)
+0008B6 0012           01359 RETURN
+                      01360 
+                      01361 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      01362 ; * TRATAMENTO DOS BOTÕES *
+                      01363 ; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                      01364 
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 28
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0008B8                01365 TRATA_STOP
+0008B8 A481           01366  BTFSS BOTAO_1
+0008BA EF5C F004      01367  GOTO  TRATA_STOP
+0008BE DD7C           01368  RCALL TELA_STOP
+                      01369 
+0008C0                01370 STOP_BOTOES
+0008C0 A681           01371  BTFSS BOTAO_2
+0008C2 EF35 F000      01372  GOTO MOSTRA_TELA_PRINCIPAL
+                      01373 
+0008C6 AE81           01374  BTFSS BOTAO_0
+0008C8 EFB8 F000      01375  GOTO STATUS_TEMPO_CONTANDO
+                      01376 
+0008CC A881           01377  BTFSS BOTAO_3
+0008CE DE04           01378  RCALL SALVAR_M1
+                      01379 
+0008D0 AA82           01380  BTFSS BOTAO_4
+0008D2 DE4E           01381  RCALL SALVAR_M2
+                      01382 
+0008D4 AC81           01383  BTFSS BOTAO_7
+0008D6 EF07 F003      01384  GOTO CALC_AREA
+                      01385 
+0008DA EF60 F004      01386  GOTO STOP_BOTOES
+                      01387 
+0008DE                01388 TRATA_BOTAO_7
+0008DE AC81           01389  BTFSS BOTAO_7
+0008E0 EF6F F004      01390  GOTO TRATA_BOTAO_7
+0008E4 EFDC F001      01391  GOTO TELA_STOP
+                      01392 
+                      01393 
+                      01394 
+0008E8                01395 TRATA_BOTAO_2
+0008E8 A681           01396  BTFSS BOTAO_2
+0008EA EF74 F004      01397  GOTO TRATA_BOTAO_2
+0008EE EF35 F000      01398  GOTO MOSTRA_TELA_PRINCIPAL
+                      01399 
+Warning[205]: Found directive in column 1. (END)
+                      01400 END 
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 29
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+A                                 00000000
+A0                                00000015
+ABDEN                             00000000
+ABDOVF                            00000007
+ACCESS                            00000000
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ACQT0                             00000003
+ACQT1                             00000004
+ACQT2                             00000005
+ADCON0                            00000FC2
+ADCON1                            00000FC1
+ADCON2                            00000FC0
+ADCS0                             00000000
+ADCS1                             00000001
+ADCS2                             00000002
+ADDEN                             00000003
+ADEN                              00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADIP                              00000006
+ADON                              00000000
+ADRES                             00000FC3
+ADRESH                            00000FC4
+ADRESL                            00000FC3
+ALTERA_MODO                       0000012E
+AN0                               00000000
+AN1                               00000001
+AN10                              00000001
+AN11                              00000004
+AN12                              00000000
+AN2                               00000002
+AN3                               00000003
+AN4                               00000005
+AN5                               00000000
+AN6                               00000001
+AN7                               00000002
+AN8                               00000002
+AN9                               00000003
+ATUALIZA                          00000356
+ATUALIZA_METROS                   00000388
+AUMENTA                           000002EA
+B0                                00000016
+BANKED                            00000001
+BAUDCON                           00000FB8
+BAUDCTL                           00000FB8
+BCLIE                             00000003
+BCLIF                             00000003
+BCLIP                             00000003
+BF                                00000000
+BGST                              00000005
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 30
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+BOR                               00000000
+BOTAO_0                           PORTB,7
+BOTAO_1                           PORTB,2
+BOTAO_2                           PORTB,3
+BOTAO_3                           PORTB,4
+BOTAO_4                           PORTC,5
+BOTAO_5                           PORTB,5
+BOTAO_7                           PORTB,6
+BRG16                             00000003
+BRGH                              00000002
+BSR                               00000FE0
+C                                 00000000
+C0                                00000017
+C1                                00000018
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CALC_AREA                         0000060E
+CCP1                              00000002
+CCP1CON                           00000FBD
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1IP                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           00000FBA
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2IP                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCP2_PORTB                        00000003
+CCP2_PORTC                        00000001
+CCPR1                             00000FBE
+CCPR1H                            00000FBF
+CCPR1L                            00000FBE
+CCPR2                             00000FBB
+CCPR2H                            00000FBC
+CCPR2L                            00000FBB
+CEN                               0000001C
+CENT                              00000008
+CFGS                              00000006
+CHS0                              00000002
+CHS1                              00000003
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 31
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CHS2                              00000004
+CHS3                              00000005
+CIS                               00000003
+CK                                00000006
+CKE                               00000006
+CKP                               00000004
+CLKI                              00000007
+CLKO                              00000006
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             00000FB4
+CMIE                              00000006
+CMIF                              00000006
+CMIP                              00000006
+CONFIGURACAO                      0000042E
+CONTAGEM                          0000000A
+CONTAGEM1                         0000000F
+CONTAGEM2                         00000014
+CORRIGE_VALOR                     00000350
+COUNTER1                          00000000
+CREN                              00000004
+CS                                00000002
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            00000FB5
+CVREF                             00000002
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+CVRSS                             00000004
+D                                 00000005
+DC                                00000001
+DC1B0                             00000004
+DC1B1                             00000005
+DC2B0                             00000004
+DC2B1                             00000005
+DDRA                              TRISA
+DDRB                              TRISB
+DDRC                              TRISC
+DDRD                              TRISD
+DDRE                              TRISE
+DECREMENTA                        0000049A
+DECREMENTANDO                     00000340
+DEFINE_UNID                       00000886
+DELAYS                            0000020E
+DELAY_MS                          00000004
+DEZ                               0000001B
+DEZE                              00000007
+DIMINUI                           00000330
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 32
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+DISPLAY                           LATD
+DONE                              00000001
+D_A                               00000005
+ECCP1AS                           00000FB6
+ECCPAS0                           00000004
+ECCPAS1                           00000005
+ECCPAS2                           00000006
+ECCPASE                           00000007
+EEADR                             00000FA9
+EECON1                            00000FA6
+EECON2                            00000FA7
+EEDATA                            00000FA8
+EEIE                              00000004
+EEIF                              00000004
+EEIP                              00000004
+EEPGD                             00000007
+ENABLE                            LATC,3
+ERRO_MEMORIA2                     0000076E
+ERRO_MODO                         000006CE
+ESCREVE                           0000003C
+ESCREVE_CM                        00000140
+ESCREVE_CRONOMETRO                00000092
+ESCREVE_MET                       00000158
+ESCREVE_START                     000000D0
+FAST                              00000001
+FERR                              00000002
+FLTS                              00000002
+FREE                              00000004
+FSR0                              00000000
+FSR0H                             00000FEA
+FSR0L                             00000FE9
+FSR1                              00000001
+FSR1H                             00000FE2
+FSR1L                             00000FE1
+FSR2                              00000002
+FSR2H                             00000FDA
+FSR2L                             00000FD9
+GCEN                              00000007
+GIE                               00000007
+GIEH                              00000007
+GIEL                              00000006
+GO                                00000001
+GO_DONE                           00000001
+HLVDCON                           00000FD2
+HLVDEN                            00000004
+HLVDIE                            00000002
+HLVDIF                            00000002
+HLVDIP                            00000002
+HLVDL0                            00000000
+HLVDL1                            00000001
+HLVDL2                            00000002
+HLVDL3                            00000003
+IBF                               00000007
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 33
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+IBOV                              00000005
+IDLEN                             00000007
+INCREMENTA                        0000045C
+INCREMENTANDO                     000002FA
+INDF0                             00000FEF
+INDF1                             00000FE7
+INDF2                             00000FDF
+INICIALIZACAO_DISPLAY             00000020
+INICIO_UNID                       0000011E
+INT0                              00000000
+INT0E                             00000004
+INT0F                             00000001
+INT0IE                            00000004
+INT0IF                            00000001
+INT1                              00000001
+INT1E                             00000003
+INT1F                             00000000
+INT1IE                            00000003
+INT1IF                            00000000
+INT1IP                            00000006
+INT1P                             00000006
+INT2                              00000002
+INT2E                             00000004
+INT2F                             00000001
+INT2IE                            00000004
+INT2IF                            00000001
+INT2IP                            00000007
+INT2P                             00000007
+INTCON                            00000FF2
+INTCON2                           00000FF1
+INTCON3                           00000FF0
+INTEDG0                           00000006
+INTEDG1                           00000005
+INTEDG2                           00000004
+INTSRC                            00000007
+IOFS                              00000002
+IPEN                              00000007
+IPR1                              00000F9F
+IPR2                              00000FA2
+IRCF0                             00000004
+IRCF1                             00000005
+IRCF2                             00000006
+IRVST                             00000005
+IVRST                             00000005
+KBI0                              00000004
+KBI1                              00000005
+KBI2                              00000006
+KBI3                              00000007
+LATA                              00000F89
+LATA0                             00000000
+LATA1                             00000001
+LATA2                             00000002
+LATA3                             00000003
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 34
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+LATA4                             00000004
+LATA5                             00000005
+LATA6                             00000006
+LATA7                             00000007
+LATB                              00000F8A
+LATB0                             00000000
+LATB1                             00000001
+LATB2                             00000002
+LATB3                             00000003
+LATB4                             00000004
+LATB5                             00000005
+LATB6                             00000006
+LATB7                             00000007
+LATC                              00000F8B
+LATC0                             00000000
+LATC1                             00000001
+LATC2                             00000002
+LATC3                             00000003
+LATC4                             00000004
+LATC5                             00000005
+LATC6                             00000006
+LATC7                             00000007
+LATD                              00000F8C
+LATD0                             00000000
+LATD1                             00000001
+LATD2                             00000002
+LATD3                             00000003
+LATD4                             00000004
+LATD5                             00000005
+LATD6                             00000006
+LATD7                             00000007
+LATE                              00000F8D
+LATE0                             00000000
+LATE1                             00000001
+LATE2                             00000002
+LCD1                              00000005
+LOOP                              000002AE
+LOOP1                             000002C4
+LOOP2                             000002D4
+LOOP3                             0000030A
+LOOP4                             0000031A
+LOP1                              0000028E
+LOP2                              0000029E
+LVDCON                            00000FD2
+LVDEN                             00000004
+LVDIE                             00000002
+LVDIF                             00000002
+LVDIN                             00000005
+LVDIP                             00000002
+LVDL0                             00000000
+LVDL1                             00000001
+LVDL2                             00000002
+LVDL3                             00000003
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 35
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+LVV0                              00000000
+LVV1                              00000001
+LVV2                              00000002
+LVV3                              00000003
+MAX1                              0000000A
+MAX2                              00000006
+MCLR                              00000003
+MEMORIA_CENT1                     0000000D
+MEMORIA_CENT2                     00000012
+MEMORIA_DEZ1                      0000000C
+MEMORIA_DEZ2                      00000011
+MEMORIA_MIL1                      0000000E
+MEMORIA_MIL2                      00000013
+MEMORIA_UNID1                     0000000B
+MEMORIA_UNID2                     00000010
+METROS                            000008A8
+MIL                               00000009
+MODO                              0000001D
+MOSTRA_TELA_PRINCIPAL             0000006A
+N                                 00000004
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BOR                           00000000
+NOT_CS                            00000002
+NOT_DONE                          00000001
+NOT_MCLR                          00000003
+NOT_PD                            00000002
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RD                            00000000
+NOT_RI                            00000004
+NOT_SS                            00000005
+NOT_T1SYNC                        00000002
+NOT_T3SYNC                        00000002
+NOT_TO                            00000003
+NOT_W                             00000002
+NOT_WR                            00000001
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OSC1                              00000007
+OSC2                              00000006
+OSCCON                            00000FD3
+OSCFIE                            00000007
+OSCFIF                            00000007
+OSCFIP                            00000007
+OSCTUNE                           00000F9B
+OSTS                              00000003
+OV                                00000003
+P                                 00000004
+P1B                               00000005
+P1C                               00000006
+P1D                               00000007
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 36
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+P1M0                              00000006
+P1M1                              00000007
+PC                                00000FF9
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000FF9
+PCLATH                            00000FFA
+PCLATU                            00000FFB
+PD                                00000002
+PDC0                              00000000
+PDC1                              00000001
+PDC2                              00000002
+PDC3                              00000003
+PDC4                              00000004
+PDC5                              00000005
+PDC6                              00000006
+PEIE                              00000006
+PEN                               00000002
+PGC                               00000006
+PGD                               00000007
+PGM                               00000005
+PIE1                              00000F9D
+PIE2                              00000FA0
+PIR1                              00000F9E
+PIR2                              00000FA1
+PLLEN                             00000006
+PLUSW0                            00000FEB
+PLUSW1                            00000FE3
+PLUSW2                            00000FDB
+POR                               00000001
+PORTA                             00000F80
+PORTB                             00000F81
+PORTC                             00000F82
+PORTD                             00000F83
+PORTE                             00000F84
+POSTDEC0                          00000FED
+POSTDEC1                          00000FE5
+POSTDEC2                          00000FDD
+POSTINC0                          00000FEE
+POSTINC1                          00000FE6
+POSTINC2                          00000FDE
+PR2                               00000FCB
+PREINC0                           00000FEC
+PREINC1                           00000FE4
+PREINC2                           00000FDC
+PROD                              00000FF3
+PRODH                             00000FF4
+PRODL                             00000FF3
+PRSEN                             00000007
+PSA                               00000003
+PSP0                              00000000
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 37
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PSP1                              00000001
+PSP2                              00000002
+PSP3                              00000003
+PSP4                              00000004
+PSP5                              00000005
+PSP6                              00000006
+PSP7                              00000007
+PSPIE                             00000007
+PSPIF                             00000007
+PSPIP                             00000007
+PSPMODE                           00000004
+PSSAC0                            00000002
+PSSAC1                            00000003
+PSSBD0                            00000000
+PSSBD1                            00000001
+PWM1CON                           00000FB7
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RA6                               00000006
+RA7                               00000007
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RBIP                              00000000
+RBPU                              00000007
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RCEN                              00000003
+RCIDL                             00000006
+RCIE                              00000005
+RCIF                              00000005
+RCIP                              00000005
+RCMT                              00000006
+RCON                              00000FD0
+RCREG                             00000FAE
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 38
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RCSTA                             00000FAB
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD16                              00000007
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+RE3                               00000003
+REG_AUX                           00000019
+RI                                00000004
+RS                                LATC,2
+RSEN                              00000001
+RX                                00000007
+RX9                               00000006
+RX9D                              00000000
+RXDTP                             00000005
+R_W                               00000002
+S                                 00000003
+SALVAR_M1                         000004D8
+SALVAR_M2                         00000570
+SBOREN                            00000006
+SCK                               00000003
+SCKP                              00000004
+SCL                               00000003
+SCS0                              00000000
+SCS1                              00000001
+SDA                               00000004
+SDI                               00000004
+SDO                               00000005
+SEN                               00000000
+SENDB                             00000003
+SENSOR1                           PORTB,0
+SENSOR2                           PORTB,1
+SMP                               00000007
+SP0                               00000000
+SP1                               00000001
+SP2                               00000002
+SP3                               00000003
+SP4                               00000004
+SPBRG                             00000FAF
+SPBRGH                            00000FB0
+SPEN                              00000007
+SREN                              00000005
+SS                                00000005
+SSPADD                            00000FC8
+SSPBUF                            00000FC9
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 39
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SSPCON1                           00000FC6
+SSPCON2                           00000FC5
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPIP                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000FC7
+STATUS                            00000FD8
+STATUS_TEMPO_CONTANDO             00000170
+STKFUL                            00000007
+STKOVF                            00000007
+STKPTR                            00000FFC
+STKUNF                            00000006
+STOP_BOTOES                       000008C0
+SWDTE                             00000000
+SWDTEN                            00000000
+SYNC                              00000004
+T08BIT                            00000006
+T0CKI                             00000004
+T0CON                             00000FD5
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0PS0                             00000000
+T0PS1                             00000001
+T0PS2                             00000002
+T0SE                              00000004
+T13CKI                            00000000
+T1CKI                             00000000
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000FCD
+T1OSCEN                           00000003
+T1OSI                             00000001
+T1OSO                             00000000
+T1RUN                             00000006
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000FCA
+T2OUTPS0                          00000003
+T2OUTPS1                          00000004
+T2OUTPS2                          00000005
+T2OUTPS3                          00000006
+T3CCP1                            00000003
+T3CCP2                            00000006
+T3CKPS0                           00000004
+T3CKPS1                           00000005
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 40
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+T3CON                             00000FB1
+T3SYNC                            00000002
+TABELA_7S                         0000004E
+TABLAT                            00000FF5
+TBLPTR                            00000FF6
+TBLPTRH                           00000FF7
+TBLPTRL                           00000FF6
+TBLPTRU                           00000FF8
+TELA_STOP                         000003B8
+TEMPO0                            00000003
+TEMPO1                            00000002
+TESTE1                            00000004
+TMR0                              00000001
+TMR0H                             00000FD7
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR0IP                            00000002
+TMR0L                             00000FD6
+TMR0ON                            00000007
+TMR1CS                            00000001
+TMR1H                             00000FCF
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1IP                            00000000
+TMR1L                             00000FCE
+TMR1ON                            00000000
+TMR2                              00000FCC
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2IP                            00000001
+TMR2ON                            00000002
+TMR3CS                            00000001
+TMR3H                             00000FB3
+TMR3IE                            00000001
+TMR3IF                            00000001
+TMR3IP                            00000001
+TMR3L                             00000FB2
+TMR3ON                            00000000
+TO                                00000003
+TOS                               00000FFD
+TOSH                              00000FFE
+TOSL                              00000FFD
+TOSU                              00000FFF
+TRATA_BOTAO_2                     000008E8
+TRATA_BOTAO_7                     000008DE
+TRATA_STOP                        000008B8
+TRISA                             00000F92
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 41
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TRISA6                            00000006
+TRISA7                            00000007
+TRISB                             00000F93
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000F94
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000F95
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000F96
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TUN0                              00000000
+TUN1                              00000001
+TUN2                              00000002
+TUN3                              00000003
+TUN4                              00000004
+TX                                00000006
+TX9                               00000006
+TX9D                              00000000
+TXCKP                             00000004
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXIP                              00000004
+TXREG                             00000FAD
+TXSTA                             00000FAC
+UA                                00000001
+UNI                               0000001A
+UNID                              00000006
+VCFG0                             00000004
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 42
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+VCFG1                             00000005
+VDIRMAG                           00000007
+VPP                               00000003
+VREFN                             00000002
+VREFP                             00000003
+W                                 00000000
+WCOL                              00000007
+WDTCON                            00000FD1
+WR                                00000001
+WREG                              00000FE8
+WREN                              00000002
+WRERR                             00000003
+WUE                               00000001
+Z                                 00000002
+_BOREN_NOSLP_2L                   000000FD
+_BOREN_OFF_2L                     000000F9
+_BOREN_ON_2L                      000000FB
+_BOREN_SBORDIS_2L                 000000FF
+_BORV_0_2L                        000000E7
+_BORV_1_2L                        000000EF
+_BORV_2_2L                        000000F7
+_BORV_3_2L                        000000FF
+_CCP2MX_PORTBE_3H                 000000FE
+_CCP2MX_PORTC_3H                  000000FF
+_CONFIG1H                         00300001
+_CONFIG2H                         00300003
+_CONFIG2L                         00300002
+_CONFIG3H                         00300005
+_CONFIG4L                         00300006
+_CONFIG5H                         00300009
+_CONFIG5L                         00300008
+_CONFIG6H                         0030000B
+_CONFIG6L                         0030000A
+_CONFIG7H                         0030000D
+_CONFIG7L                         0030000C
+_CP0_OFF_5L                       000000FF
+_CP0_ON_5L                        000000FE
+_CP1_OFF_5L                       000000FF
+_CP1_ON_5L                        000000FD
+_CP2_OFF_5L                       000000FF
+_CP2_ON_5L                        000000FB
+_CP3_OFF_5L                       000000FF
+_CP3_ON_5L                        000000F7
+_CPB_OFF_5H                       000000FF
+_CPB_ON_5H                        000000BF
+_CPD_OFF_5H                       000000FF
+_CPD_ON_5H                        0000007F
+_DEBUG_OFF_4L                     000000FF
+_DEBUG_ON_4L                      0000007F
+_DEVID1                           003FFFFE
+_DEVID2                           003FFFFF
+_EBTR0_OFF_7L                     000000FF
+_EBTR0_ON_7L                      000000FE
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 43
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_EBTR1_OFF_7L                     000000FF
+_EBTR1_ON_7L                      000000FD
+_EBTR2_OFF_7L                     000000FF
+_EBTR2_ON_7L                      000000FB
+_EBTR3_OFF_7L                     000000FF
+_EBTR3_ON_7L                      000000F7
+_EBTRB_OFF_7H                     000000FF
+_EBTRB_ON_7H                      000000BF
+_FCMEN_OFF_1H                     000000BF
+_FCMEN_ON_1H                      000000FF
+_IDLOC0                           00200000
+_IDLOC1                           00200001
+_IDLOC2                           00200002
+_IDLOC3                           00200003
+_IDLOC4                           00200004
+_IDLOC5                           00200005
+_IDLOC6                           00200006
+_IDLOC7                           00200007
+_IESO_OFF_1H                      0000007F
+_IESO_ON_1H                       000000FF
+_LPT1OSC_OFF_3H                   000000FB
+_LPT1OSC_ON_3H                    000000FF
+_LVP_OFF_4L                       000000FB
+_LVP_ON_4L                        000000FF
+_MCLRE_OFF_3H                     0000007F
+_MCLRE_ON_3H                      000000FF
+_OSC_ECIO6_1H                     000000F5
+_OSC_EC_1H                        000000F4
+_OSC_HSPLL_1H                     000000F6
+_OSC_HS_1H                        000000F2
+_OSC_INTIO67_1H                   000000F8
+_OSC_INTIO7_1H                    000000F9
+_OSC_LP_1H                        000000F0
+_OSC_RCIO6_1H                     000000F7
+_OSC_RC_1H                        000000F3
+_OSC_XT_1H                        000000F1
+_PBADEN_OFF_3H                    000000FD
+_PBADEN_ON_3H                     000000FF
+_PWRT_OFF_2L                      000000FF
+_PWRT_ON_2L                       000000FE
+_STVREN_OFF_4L                    000000FE
+_STVREN_ON_4L                     000000FF
+_WDTPS_1024_2H                    000000F5
+_WDTPS_128_2H                     000000EF
+_WDTPS_16384_2H                   000000FD
+_WDTPS_16_2H                      000000E9
+_WDTPS_1_2H                       000000E1
+_WDTPS_2048_2H                    000000F7
+_WDTPS_256_2H                     000000F1
+_WDTPS_2_2H                       000000E3
+_WDTPS_32768_2H                   000000FF
+_WDTPS_32_2H                      000000EB
+_WDTPS_4096_2H                    000000F9
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 44
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_WDTPS_4_2H                       000000E5
+_WDTPS_512_2H                     000000F3
+_WDTPS_64_2H                      000000ED
+_WDTPS_8192_2H                    000000FB
+_WDTPS_8_2H                       000000E7
+_WDT_OFF_2H                       000000FE
+_WDT_ON_2H                        000000FF
+_WRT0_OFF_6L                      000000FF
+_WRT0_ON_6L                       000000FE
+_WRT1_OFF_6L                      000000FF
+_WRT1_ON_6L                       000000FD
+_WRT2_OFF_6L                      000000FF
+_WRT2_ON_6L                       000000FB
+_WRT3_OFF_6L                      000000FF
+_WRT3_ON_6L                       000000F7
+_WRTB_OFF_6H                      000000FF
+_WRTB_ON_6H                       000000BF
+_WRTC_OFF_6H                      000000FF
+_WRTC_ON_6H                       000000DF
+_WRTD_OFF_6H                      000000FF
+_WRTD_ON_6H                       0000007F
+_XINST_OFF_4L                     000000BF
+_XINST_ON_4L                      000000FF
+__18F4520                         00000001
+__DEBUG                           1
+conv_binToDec                     0000084E
+end_adj                           0000087E
+incDezA                           0000087C
+loop_mult                         0000083C
+mult                              00000834
+start_adj                         0000085C
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+00C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0100 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0140 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0180 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+01C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0200 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0240 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0280 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+MPASM  5.37                 TRENA MCR ASM.ASM   11-30-2018  20:11:02         PAGE 45
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+
+02C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0300 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0340 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0380 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+03C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0400 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0440 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0480 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+04C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0500 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0540 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0580 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+05C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0600 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0640 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0680 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+06C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0700 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0740 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0780 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+07C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0800 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0840 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0880 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+08C0 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XX--------------
+0000 : -XXX-XX-XXXXXX-- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Bytes Used:  2301
+Program Memory Bytes Free: 30467
+
+
+Errors   :     0
+Warnings :    42 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+
